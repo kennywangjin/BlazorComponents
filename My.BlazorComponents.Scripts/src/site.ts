@@ -1,7 +1,7 @@
 import Highcharts from "highcharts";
 import "./site.scss";
 
-(function(global: any) {
+(function (global: any) {
     const getChart = (element: HTMLElement): Highcharts.Chart | undefined => {
         const attr = element.getAttribute("data-highcharts-chart");
         const chartId = Number.parseInt(attr || "-1", 10);
@@ -9,31 +9,41 @@ import "./site.scss";
     };
 
     global.__app = {
-        renderChart: (element: HTMLElement, options: Highcharts.Options) => {
-            const chart = getChart(element);
-            if (chart) {
-                chart.update(options);
-            } else {
-                options = {
-                    global: {
-                        useUTC: false
-                    },
-                    chart: {
-                        style: {
-                            fontFamily:
-                                "'Helvetica Neue', Helvetica, Arial, sans-serif"
-                        }
-                    },
-                    credits: { enabled: false },
-                    ...options
-                };
-                Highcharts.chart(element, options);
-            }
-        },
-        destroyChart: (element: HTMLElement) => {
-            const chart = getChart(element);
-            if (chart) {
-                chart.destroy();
+        chart: {
+            render: (element: HTMLElement, options: Highcharts.Options) => {
+                let chart = getChart(element);
+
+                if (chart) {
+                    chart.update(options);
+                } else {
+                    options = {
+                        global: {
+                            useUTC: false
+                        },
+                        chart: {
+                            style: {
+                                fontFamily:
+                                    "'Helvetica Neue', Helvetica, Arial, sans-serif"
+                            }
+                        },
+                        credits: { enabled: false },
+                        ...options
+                    };
+                    chart = Highcharts.chart(element, options);
+                }
+                chart.hideLoading();
+            },
+            showLoading: (element: HTMLElement) => {
+                const chart = getChart(element);
+                if (chart) {
+                    chart.showLoading();
+                }
+            },
+            destroy: (element: HTMLElement) => {
+                const chart = getChart(element);
+                if (chart) {
+                    chart.destroy();
+                }
             }
         },
         toast: {

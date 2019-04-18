@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Reports.WebApp.Components.Shared
+namespace My.BlazorComponents
 {
     public enum ModalSize
     {

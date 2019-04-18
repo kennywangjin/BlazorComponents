@@ -1,37 +1,37 @@
-﻿@inject IJSRuntime _jsRuntime
+﻿@inject IJSRuntime JSRuntime
+@inject IComponentContext Context
 @implements IDisposable
 
 <div ref="@_container" style="width:@Width;height:@Height"></div>
 
 @functions {
-    private ElementRef _container;
+    ElementRef _container;
 
     [Parameter] bool IsBusy { get; set; }
     [Parameter] object Options { get; set; }
     [Parameter] string Width { get; set; } = "100%";
     [Parameter] string Height { get; set; } = "600px";
 
-    protected override Task OnAfterRenderAsync()
+    protected async override Task OnAfterRenderAsync()
     {
-        try
+        if (Context.IsConnected)
         {
-            return _jsRuntime.InvokeAsync<object>("__app.renderChart", _container, Options);
-        }
-        catch (InvalidOperationException)
-        {
-            return Task.CompletedTask;
+            if (IsBusy)
+            {
+                await JSRuntime.InvokeAsync<object>("__app.chart.showLoading", _container);
+            }
+            else
+            {
+                await JSRuntime.InvokeAsync<object>("__app.chart.render", _container, Options);
+            }
         }
     }
 
     public void Dispose()
     {
-        try
+        if (Context.IsConnected)
         {
-            _ = _jsRuntime.InvokeAsync<object>("__app.destroyChart", _container);
-        }
-        catch(InvalidOperationException)
-        {
-
+            _ = JSRuntime.InvokeAsync<object>("__app.chart.destroy", _container);
         }
     }
 }

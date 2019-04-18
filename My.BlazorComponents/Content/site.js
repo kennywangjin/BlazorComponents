@@ -36,26 +36,28 @@
             return Highcharts.charts[chartId];
         };
         global.__app = {
-            renderChart: function (element, options) {
-                var chart = getChart(element);
-                if (chart) {
-                    chart.update(options);
-                }
-                else {
-                    options = __assign({ global: {
-                            useUTC: false
-                        }, chart: {
-                            style: {
-                                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"
-                            }
-                        }, credits: { enabled: false } }, options);
-                    Highcharts.chart(element, options);
-                }
-            },
-            destroyChart: function (element) {
-                var chart = getChart(element);
-                if (chart) {
-                    chart.destroy();
+            chart: {
+                render: function (element, options) {
+                    var chart = getChart(element);
+                    if (chart) {
+                        chart.update(options);
+                    }
+                    else {
+                        options = __assign({ global: {
+                                useUTC: false
+                            }, chart: {
+                                style: {
+                                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"
+                                }
+                            }, credits: { enabled: false } }, options);
+                        Highcharts.chart(element, options);
+                    }
+                },
+                destroy: function (element) {
+                    var chart = getChart(element);
+                    if (chart) {
+                        chart.destroy();
+                    }
                 }
             },
             toast: {
