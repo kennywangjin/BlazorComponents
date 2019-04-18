@@ -1,0 +1,37 @@
+﻿@inject IJSRuntime _jsRuntime
+@implements IDisposable
+
+<div ref="@_container" style="width:@Width;height:@Height"></div>
+
+@functions {
+    private ElementRef _container;
+
+    [Parameter] bool IsBusy { get; set; }
+    [Parameter] object Options { get; set; }
+    [Parameter] string Width { get; set; } = "100%";
+    [Parameter] string Height { get; set; } = "600px";
+
+    protected override Task OnAfterRenderAsync()
+    {
+        try
+        {
+            return _jsRuntime.InvokeAsync<object>("__app.renderChart", _container, Options);
+        }
+        catch (InvalidOperationException)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    public void Dispose()
+    {
+        try
+        {
+            _ = _jsRuntime.InvokeAsync<object>("__app.destroyChart", _container);
+        }
+        catch(InvalidOperationException)
+        {
+
+        }
+    }
+}

@@ -1,0 +1,59 @@
+﻿@if (PageCount > 1)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination mb-0">
+            <li class="@GetPageItemClass(PageIndex-1)">
+                <span class="page-link" aria-label="Previous" onclick="@(()=>PaginateAsync(PageIndex-1))">
+                    <span aria-hidden="true">&laquo;</span>
+                </span>
+            </li>
+            @for (int i = 0; i < PageCount; i++)
+            {
+                int page = i;
+                <li class="@GetPageItemClass(page)">
+                    <span class="page-link" onclick="@(()=> PaginateAsync(page))">@(page + 1)</span>
+                </li>
+            }
+            <li class="@GetPageItemClass(PageIndex+1)">
+                <span class="page-link" aria-label="Next" onclick="@(()=>PaginateAsync(PageIndex+1))">
+                    <span aria-hidden="true">&raquo;</span>
+                </span>
+            </li>
+        </ul>
+    </nav>
+}
+
+<style>
+    .page-item:not(.active):not(.disabled) {
+        cursor: pointer;
+    }
+</style>
+
+@functions {
+    [Parameter] int PageIndex { get; set; }
+    [Parameter] int PageCount { get; set; } = 1;
+    [Parameter] int Total { get; set; }
+    [Parameter] EventCallback<int> OnPaginate { get; set; }
+
+    private string GetPageItemClass(int page)
+    {
+        string klass = "page-item";
+        if (page == PageIndex)
+        {
+            klass += " active";
+        }
+        if (page < 0 || page > PageCount - 1)
+        {
+            klass += " disabled";
+        }
+        return klass;
+    }
+
+    private async Task PaginateAsync(int page)
+    {
+        if (page != PageIndex && page < PageCount && page > -1)
+        {
+            await OnPaginate.InvokeAsync(page);
+        }
+    }
+}

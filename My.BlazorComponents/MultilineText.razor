@@ -1,0 +1,11 @@
+﻿@foreach (var segment in TextSegments)
+{
+    <span class="d-block">@segment</span>
+}
+
+@functions {
+    [Parameter] string? Text { get; set; }
+
+    string[] TextSegments
+        => string.IsNullOrEmpty(Text) ? Array.Empty<string>() : Text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+}

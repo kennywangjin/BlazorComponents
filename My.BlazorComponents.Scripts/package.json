@@ -1,0 +1,37 @@
+{
+  "name": "my.blazorcomponents.scripts",
+  "version": "1.0.0",
+  "description": "client scripts and styles for blazor components",
+  "main": "site.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:development": "rollup -c --environment build:development",
+    "build:production": "npm install && rollup -c --environment build:production",
+    "start": "rollup -c -w --environment build:development"
+  },
+  "keywords": [
+    "client"
+  ],
+  "author": "kennywangjin",
+  "license": "MIT",
+  "dependencies": {
+    "@dotnet/jsinterop": "^0.1.1",
+    "@types/bootstrap": "^4.3.0",
+    "@types/jquery": "^3.3.29",
+    "highcharts": "^7.1.1",
+    "node-sass": "^4.11.0",
+    "rollup": "^1.10.0",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-postcss": "^2.0.3",
+    "rollup-plugin-typescript": "^1.0.1",
+    "rollup-plugin-uglify": "^6.0.2",
+    "tslib": "^1.9.3",
+    "typescript": "^3.4.3"
+  },
+  "-vs-binding": {
+    "ProjectOpened": [
+      "start"
+    ]
+  }
+}

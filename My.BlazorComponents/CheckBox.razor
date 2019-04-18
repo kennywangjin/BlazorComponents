@@ -1,0 +1,11 @@
+﻿<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="@Id" checked="@IsChecked" onclick="@OnToggle" />
+    <label class="custom-control-label" for="@Id">@Label</label>
+</div>
+
+@functions {
+    [Parameter] string Label { get; set; }
+    [Parameter] string Id { get; set; }
+    [Parameter] bool IsChecked { get; set; }
+    [Parameter] EventCallback OnToggle { get; set; }
+}

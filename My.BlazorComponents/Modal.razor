@@ -1,0 +1,69 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div ref="@_element" class="modal fade" tabindex="-1" role="dialog">
+    <div class="@($"modal-dialog {Size.GetCssClass()}")" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    @ModalTitle
+                </h5>
+                <button type="button" class="close" aria-label="Close" onclick="@OnClose">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @ModalBody
+            </div>
+            <div class="modal-footer">
+                @ModalFooter
+                <button class="btn btn-secondary" type="button" onclick="@OnClose">
+                    <i class="fas fa-times mr-2" aria-hidden="true"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    [Parameter] bool IsVisible { get; set; } = true;
+    [Parameter] ModalSize Size { get; set; } = ModalSize.Default;
+    [Parameter] RenderFragment ModalTitle { get; set; }
+    [Parameter] RenderFragment ModalBody { get; set; }
+    [Parameter] RenderFragment ModalFooter { get; set; }
+    [Parameter] EventCallback OnClose { get; set; }
+    [Parameter] EventCallback OnClosed { get; set; }
+
+    private bool _isInitialized;
+    private ElementRef _element;
+
+    protected override Task OnAfterRenderAsync()
+    {
+        if (!_isInitialized)
+        {
+            _isInitialized = true;
+            if (IsVisible)
+            {
+                JSRuntime.InvokeAsync<bool>("__app.modal.show", _element, new DotNetObjectRef(this));
+            }
+        }
+        else
+        {
+            if (IsVisible)
+            {
+                JSRuntime.InvokeAsync<bool>("__app.modal.show", _element, new DotNetObjectRef(this));
+            }
+            else
+            {
+                JSRuntime.InvokeAsync<bool>("__app.modal.close", _element, new DotNetObjectRef(this));
+            }
+        }
+        return base.OnAfterRenderAsync();
+    }
+
+    [JSInvokable]
+    public Task OnModalShownAsync() => Task.CompletedTask;
+
+    [JSInvokable]
+    public Task OnModalClosedAsync() => OnClosed.InvokeAsync(null);
+}
