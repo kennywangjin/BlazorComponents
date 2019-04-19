@@ -1,7 +1,7 @@
 import Highcharts from "highcharts";
 import "./site.scss";
 
-(function (global: any) {
+(function(global: any) {
     const getChart = (element: HTMLElement): Highcharts.Chart | undefined => {
         const attr = element.getAttribute("data-highcharts-chart");
         const chartId = Number.parseInt(attr || "-1", 10);
@@ -19,6 +19,9 @@ import "./site.scss";
                     options = {
                         global: {
                             useUTC: false
+                        },
+                        lang: {
+                            loading: undefined
                         },
                         chart: {
                             style: {

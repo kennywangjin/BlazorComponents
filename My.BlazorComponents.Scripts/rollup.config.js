@@ -9,7 +9,7 @@ const isDev = process.env.build === 'development';
 export default {
     input: "src/site.ts",
     output: {
-        dir: "../My.BlazorComponents/wwwroot",
+        dir: "../My.BlazorComponents/content",
         format: "iife",
         globals: { highcharts: "Highcharts", jquery: "$" }
     },

@@ -3,9 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <TypeScriptCompileBlocked>True</TypeScriptCompileBlocked>
-    <ApplicationIcon />
     <OutputType>Library</OutputType>
-    <StartupObject />
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
 
