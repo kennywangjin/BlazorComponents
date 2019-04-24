@@ -7,10 +7,6 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
   <Target Name="PreBuild" BeforeTargets="Build">
     <Exec Command="npm run build:development" Condition=" '$(Configuration)' == 'Debug' " WorkingDirectory="$(ProjectDir)" />
     <Exec Command="npm run build:production" Condition=" '$(Configuration)' != 'Debug' " WorkingDirectory="$(ProjectDir)" />

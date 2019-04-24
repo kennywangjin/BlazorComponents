@@ -45,12 +45,21 @@
                     else {
                         options = __assign({ global: {
                                 useUTC: false
+                            }, lang: {
+                                loading: undefined
                             }, chart: {
                                 style: {
                                     fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"
                                 }
                             }, credits: { enabled: false } }, options);
-                        Highcharts.chart(element, options);
+                        chart = Highcharts.chart(element, options);
+                    }
+                    chart.hideLoading();
+                },
+                showLoading: function (element) {
+                    var chart = getChart(element);
+                    if (chart) {
+                        chart.showLoading();
                     }
                 },
                 destroy: function (element) {

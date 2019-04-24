@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
 @inject IComponentContext Context
 @implements IDisposable
 
@@ -31,7 +32,7 @@
     {
         if (Context.IsConnected)
         {
-            _ = JSRuntime.InvokeAsync<object>("__app.chart.destroy", _container);
+            JSRuntime.InvokeAsync<object>("__app.chart.destroy", _container).ConfigureAwait(false);
         }
     }
 }

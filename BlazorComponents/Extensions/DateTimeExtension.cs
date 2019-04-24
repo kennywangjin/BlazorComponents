@@ -1,6 +1,6 @@
 using System;
 
-namespace My.BlazorComponents
+namespace BlazorComponents
 {
     public static class DateTimeExtension
     {

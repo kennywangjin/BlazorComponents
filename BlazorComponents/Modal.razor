@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
 
 <div ref="@_element" class="modal fade" tabindex="-1" role="dialog">
     <div class="@($"modal-dialog {Size.GetCssClass()}")" role="document">
