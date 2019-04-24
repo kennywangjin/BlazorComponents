@@ -1,46 +1,22 @@
-import { render, showLoading, destroy } from './chart';
+import * as Chart from "./chart";
+import * as Modal from "./modal";
+import * as Toast from "./toast";
 import "./site.scss";
 
-(function (global: any) {
+(function(global: any) {
     global.__app = {
         chart: {
-            render,
-            showLoading,
-            destroy
+            render: Chart.render,
+            showLoading: Chart.showLoading,
+            destroy: Chart.destroy
         },
         toast: {
-            show: (element: HTMLElement, dotnetHelper: any) => {
-                $(element)
-                    .one("shown.bs.toast", () => {
-                        dotnetHelper.invokeMethodAsync("OnToastShownAsync");
-                    })
-                    .toast("show");
-            },
-            close: (element: HTMLElement, dotnetHelper: any) => {
-                $(element)
-                    .one("hidden.bs.toast", () => {
-                        $(element).toast("dispose");
-                        dotnetHelper.invokeMethodAsync("OnToastClosedAsync");
-                    })
-                    .toast("hide");
-            }
+            show: Modal.show,
+            close: Modal.close
         },
         modal: {
-            show: (element: HTMLElement, dotnetHelper: any) => {
-                $(element)
-                    .one("shown.bs.modal", () => {
-                        dotnetHelper.invokeMethodAsync("OnModalShownAsync");
-                    })
-                    .modal({ backdrop: "static", keyboard: false });
-            },
-            close: (element: HTMLElement, dotnetHelper: any) => {
-                $(element)
-                    .one("hidden.bs.modal", () => {
-                        $(element).modal("dispose");
-                        dotnetHelper.invokeMethodAsync("OnModalClosedAsync");
-                    })
-                    .modal("hide");
-            }
+            show: Toast.show,
+            close: Toast.close
         }
     };
 })(window);

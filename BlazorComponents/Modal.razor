@@ -1,5 +1,6 @@
 ﻿@using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
+@inject IComponentContext ComponentContext
 
 <div ref="@_element" class="modal fade" tabindex="-1" role="dialog">
     <div class="@($"modal-dialog {Size.GetCssClass()}")" role="document">
@@ -35,31 +36,21 @@
     [Parameter] EventCallback OnClose { get; set; }
     [Parameter] EventCallback OnClosed { get; set; }
 
-    private bool _isInitialized;
     private ElementRef _element;
 
-    protected override Task OnAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync()
     {
-        if (!_isInitialized)
-        {
-            _isInitialized = true;
-            if (IsVisible)
-            {
-                JSRuntime.InvokeAsync<bool>("__app.modal.show", _element, new DotNetObjectRef(this));
-            }
-        }
-        else
+        if (ComponentContext.IsConnected)
         {
             if (IsVisible)
             {
-                JSRuntime.InvokeAsync<bool>("__app.modal.show", _element, new DotNetObjectRef(this));
+                await JSRuntime.InvokeAsync<bool>("__app.modal.show", _element, new DotNetObjectRef(this));
             }
             else
             {
-                JSRuntime.InvokeAsync<bool>("__app.modal.close", _element, new DotNetObjectRef(this));
+                await JSRuntime.InvokeAsync<bool>("__app.modal.close", _element, new DotNetObjectRef(this));
             }
         }
-        return base.OnAfterRenderAsync();
     }
 
     [JSInvokable]

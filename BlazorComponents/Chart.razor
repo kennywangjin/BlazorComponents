@@ -1,6 +1,6 @@
 ﻿@using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
-@inject IComponentContext Context
+@inject IComponentContext ComponentContext
 @implements IDisposable
 
 <div ref="@_container" style="width:@Width;height:@Height"></div>
@@ -8,16 +8,16 @@
 @functions {
     ElementRef _container;
 
-    [Parameter] bool IsBusy { get; set; }
+    [Parameter] bool IsLoading { get; set; } = false;
     [Parameter] object Options { get; set; }
     [Parameter] string Width { get; set; } = "100%";
     [Parameter] string Height { get; set; } = "600px";
 
     protected async override Task OnAfterRenderAsync()
     {
-        if (Context.IsConnected)
+        if (ComponentContext.IsConnected)
         {
-            if (IsBusy)
+            if (IsLoading)
             {
                 await JSRuntime.InvokeAsync<object>("__app.chart.showLoading", _container);
             }
@@ -30,7 +30,7 @@
 
     public void Dispose()
     {
-        if (Context.IsConnected)
+        if (ComponentContext.IsConnected)
         {
             JSRuntime.InvokeAsync<object>("__app.chart.destroy", _container).ConfigureAwait(false);
         }
