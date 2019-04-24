@@ -1,53 +1,12 @@
-import Highcharts from "highcharts";
+import { render, showLoading, destroy } from './chart';
 import "./site.scss";
 
-(function(global: any) {
-    const getChart = (element: HTMLElement): Highcharts.Chart | undefined => {
-        const attr = element.getAttribute("data-highcharts-chart");
-        const chartId = Number.parseInt(attr || "-1", 10);
-        return Highcharts.charts[chartId];
-    };
-
+(function (global: any) {
     global.__app = {
         chart: {
-            render: (element: HTMLElement, options: Highcharts.Options) => {
-                let chart = getChart(element);
-
-                if (chart) {
-                    chart.update(options);
-                } else {
-                    options = {
-                        global: {
-                            useUTC: false
-                        },
-                        lang: {
-                            loading: undefined
-                        },
-                        chart: {
-                            style: {
-                                fontFamily:
-                                    "'Helvetica Neue', Helvetica, Arial, sans-serif"
-                            }
-                        },
-                        credits: { enabled: false },
-                        ...options
-                    };
-                    chart = Highcharts.chart(element, options);
-                }
-                chart.hideLoading();
-            },
-            showLoading: (element: HTMLElement) => {
-                const chart = getChart(element);
-                if (chart) {
-                    chart.showLoading();
-                }
-            },
-            destroy: (element: HTMLElement) => {
-                const chart = getChart(element);
-                if (chart) {
-                    chart.destroy();
-                }
-            }
+            render,
+            showLoading,
+            destroy
         },
         toast: {
             show: (element: HTMLElement, dotnetHelper: any) => {
