@@ -6,6 +6,8 @@
 @functions {
     [Parameter] string Text { get; set; }
 
-    string[] TextSegments
-        => string.IsNullOrEmpty(Text) ? Array.Empty<string>() : Text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+    IEnumerable<string> TextSegments =>
+        string.IsNullOrEmpty(Text) ?
+            Enumerable.Empty<string>() :
+            Text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
 }

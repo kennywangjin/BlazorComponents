@@ -28,6 +28,41 @@
         }
     };
 
+    var show = function (element, dotnetModal) {
+        $(element)
+            .one("shown.bs.modal", function () {
+            dotnetModal.invokeMethodAsync("OnModalShownAsync");
+        })
+            .modal({
+            backdrop: "static",
+            keyboard: false
+        });
+    };
+    var close = function (element, dotnetModal) {
+        $(element)
+            .one("hidden.bs.modal", function () {
+            $(element).modal("dispose");
+            dotnetModal.invokeMethodAsync("OnModalClosedAsync");
+        })
+            .modal("hide");
+    };
+
+    var show$1 = function (element, dotnetToast) {
+        $(element)
+            .one("shown.bs.toast", function () {
+            dotnetToast.invokeMethodAsync("OnToastShownAsync");
+        })
+            .toast("show");
+    };
+    var close$1 = function (element, dotnetToast) {
+        $(element)
+            .one("hidden.bs.toast", function () {
+            $(element).toast("dispose");
+            dotnetToast.invokeMethodAsync("OnToastClosedAsync");
+        })
+            .toast("hide");
+    };
+
     (function (global) {
         global.__app = {
             chart: {
@@ -36,38 +71,12 @@
                 destroy: destroy
             },
             toast: {
-                show: function (element, dotnetHelper) {
-                    $(element)
-                        .one("shown.bs.toast", function () {
-                        dotnetHelper.invokeMethodAsync("OnToastShownAsync");
-                    })
-                        .toast("show");
-                },
-                close: function (element, dotnetHelper) {
-                    $(element)
-                        .one("hidden.bs.toast", function () {
-                        $(element).toast("dispose");
-                        dotnetHelper.invokeMethodAsync("OnToastClosedAsync");
-                    })
-                        .toast("hide");
-                }
+                show: show,
+                close: close
             },
             modal: {
-                show: function (element, dotnetHelper) {
-                    $(element)
-                        .one("shown.bs.modal", function () {
-                        dotnetHelper.invokeMethodAsync("OnModalShownAsync");
-                    })
-                        .modal({ backdrop: "static", keyboard: false });
-                },
-                close: function (element, dotnetHelper) {
-                    $(element)
-                        .one("hidden.bs.modal", function () {
-                        $(element).modal("dispose");
-                        dotnetHelper.invokeMethodAsync("OnModalClosedAsync");
-                    })
-                        .modal("hide");
-                }
+                show: show$1,
+                close: close$1
             }
         };
     })(window);
