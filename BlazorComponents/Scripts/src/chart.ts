@@ -1,4 +1,4 @@
-﻿import Highcharts, { Options, Chart } from 'highcharts';
+﻿import Highcharts, { Options, Chart } from "highcharts";
 
 const ChartObjects = new Map<HTMLElement, Chart>();
 
@@ -7,11 +7,11 @@ export const render = (container: HTMLElement, options: Options) => {
     if (chart) {
         chart.update(options);
     } else {
-        chart = Highcharts.chart(container, options)
+        chart = Highcharts.chart(container, options);
         ChartObjects.set(container, chart);
     }
     chart.hideLoading();
-}
+};
 
 export const showLoading = (container: HTMLElement) => {
     const chart = ChartObjects.get(container);
@@ -25,4 +25,4 @@ export const destroy = (container: HTMLElement) => {
     if (chart) {
         chart.destroy();
     }
-}
+};

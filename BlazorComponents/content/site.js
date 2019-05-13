@@ -70,11 +70,11 @@
                 showLoading: showLoading,
                 destroy: destroy
             },
-            toast: {
+            modal: {
                 show: show,
                 close: close
             },
-            modal: {
+            toast: {
                 show: show$1,
                 close: close$1
             }

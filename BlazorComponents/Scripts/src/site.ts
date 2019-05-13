@@ -10,11 +10,11 @@ import "./site.scss";
             showLoading: Chart.showLoading,
             destroy: Chart.destroy
         },
-        toast: {
+        modal: {
             show: Modal.show,
             close: Modal.close
         },
-        modal: {
+        toast: {
             show: Toast.show,
             close: Toast.close
         }
