@@ -2,27 +2,41 @@
 
 const ChartObjects = new Map<HTMLElement, Chart>();
 
-export const render = (container: HTMLElement, options: Options) => {
+Highcharts.setOptions({
+    credits: {
+        enabled: false
+    }, lang: {
+        loading: ""
+    }
+});
+
+export const render = (
+    container: HTMLElement,
+    options: Options,
+    loading: boolean = false
+) => {
     let chart = ChartObjects.get(container);
-    if (chart) {
-        chart.update(options);
-    } else {
+    options = {
+        ...options,
+        ...{ tooltip: { xDateFormat: "%A, %b %e, %H:%M" } }
+    };
+    if (!chart) {
+        // first time rendering
         chart = Highcharts.chart(container, options);
         ChartObjects.set(container, chart);
-    }
-    chart.hideLoading();
-};
-
-export const showLoading = (container: HTMLElement) => {
-    const chart = ChartObjects.get(container);
-    if (chart) {
-        chart.showLoading();
+        if (loading) chart.showLoading();
+    } else {
+        // chart updating
+        if (loading) {
+            chart.showLoading();
+        } else {
+            chart.update(options);
+            if (!loading) chart.hideLoading();
+        }
     }
 };
 
 export const destroy = (container: HTMLElement) => {
     const chart = ChartObjects.get(container);
-    if (chart) {
-        chart.destroy();
-    }
+    if (chart) chart.destroy();
 };

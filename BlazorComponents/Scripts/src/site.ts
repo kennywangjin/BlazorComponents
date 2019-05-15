@@ -7,7 +7,6 @@ import "./site.scss";
     global.__app = {
         chart: {
             render: Chart.render,
-            showLoading: Chart.showLoading,
             destroy: Chart.destroy
         },
         modal: {

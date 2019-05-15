@@ -1,7 +1,7 @@
 html {
   font-size: 14px; }
   html body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    font-family: "Lucida Grande","Lucida Sans Unicode",Arial,Helvetica,sans-serif; }
 
 app {
   position: relative;
@@ -95,27 +95,54 @@ app {
   display: flex;
   align-items: center;
   flex-wrap: wrap; }
-  .toolbar > .toolbar-group,
-  .toolbar > .search-box,
-  .toolbar > .custom-checkbox {
-    margin-bottom: 0.25rem; }
+  .toolbar .form-group {
+    margin-bottom: 0;
+    flex-shrink: 0; }
+    .toolbar .form-group select.form-control {
+      width: 15rem; }
+    .toolbar .form-group [type=date].form-control {
+      width: 12rem; }
   .toolbar .search-box {
-    width: 25rem; }
-  .toolbar .toolbar-group {
+    width: 25rem;
+    flex-shrink: 0; }
+
+/*.toolbar {
     display: flex;
     align-items: center;
-    margin-right: 1.25rem; }
-    .toolbar .toolbar-group label {
-      margin-bottom: 0;
-      margin-right: 0.5rem; }
-    .toolbar .toolbar-group .form-control {
-      width: unset;
-      flex-grow: 1;
-      flex-shrink: 1;
-      width: 15rem; }
-      .toolbar .toolbar-group .form-control[type="date"] {
-        width: 11rem; }
+    flex-wrap: wrap;
 
+    & > .toolbar-group,
+    & > .search-box,
+    & > .custom-checkbox {
+        margin-bottom: 0.25rem;
+    }
+
+    .search-box {
+        width: 25rem;
+    }
+
+    .toolbar-group {
+        display: flex;
+        align-items: center;
+        margin-right: 1.25rem;
+
+        label {
+            margin-bottom: 0;
+            margin-right: 0.5rem;
+        }
+
+        .form-control {
+            width: unset;
+            flex-grow: 1;
+            flex-shrink: 1;
+            width: 15rem;
+
+            &[type="date"] {
+                width: 11rem;
+            }
+        }
+    }
+}*/
 .toast {
   width: 25rem; }
 
@@ -123,3 +150,14 @@ app {
   position: absolute;
   top: 1rem;
   right: 1rem; }
+
+.highcharts-loading-inner {
+  display: inline-block;
+  width: 3rem;
+  height: 3rem;
+  vertical-align: text-bottom;
+  border: .25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border .75s linear infinite;
+  color: #17a2b8; }
