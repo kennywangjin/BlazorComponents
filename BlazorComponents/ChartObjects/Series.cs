@@ -8,7 +8,7 @@ namespace BlazorComponents.ChartObjects
         public string Type { get; }
         public string Name { get; set; }
         public int YAxis { get; set; } = 0;
-        public IEnumerable<double[]> Data { get; set; } = Enumerable.Empty<double[]>();
+        public IEnumerable<double[]>? Data { get; set; }
 
         public Series(string type)
         {

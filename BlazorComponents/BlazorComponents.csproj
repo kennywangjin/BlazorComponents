@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <AddRazorSupportForMvc>True</AddRazorSupportForMvc>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <LangVersion>8.0</LangVersion>
+    <NullableContextOptions>enable</NullableContextOptions>
   </PropertyGroup>
 
   <ItemGroup>
