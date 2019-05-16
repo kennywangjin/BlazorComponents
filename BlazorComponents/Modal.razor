@@ -2,14 +2,14 @@
 @inject IJSRuntime JSRuntime
 @inject IComponentContext ComponentContext
 
-<div ref="@_element" class="modal fade" tabindex="-1" role="dialog">
+<div ref="@container" class="modal fade" tabindex="-1" role="dialog">
     <div class="@($"modal-dialog {Size.GetCssClass()}")" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
                     @ModalTitle
                 </h5>
-                <button type="button" class="close" aria-label="Close" onclick="@OnClose">
+                <button type="button" class="close" aria-label="Close" onclick="@Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="modal-footer">
                 @ModalFooter
-                <button class="btn btn-secondary" type="button" onclick="@OnClose">
+                <button class="btn btn-secondary" type="button" onclick="@Close">
                     <i class="fas fa-times mr-2" aria-hidden="true"></i>
                     <span>Close</span>
                 </button>
@@ -33,29 +33,30 @@
     [Parameter] RenderFragment ModalTitle { get; set; }
     [Parameter] RenderFragment ModalBody { get; set; }
     [Parameter] RenderFragment ModalFooter { get; set; }
-    [Parameter] EventCallback OnClose { get; set; }
-    [Parameter] EventCallback OnClosed { get; set; }
+    [Parameter] EventCallback Close { get; set; }
+    [Parameter] EventCallback Closed { get; set; }
 
-    private ElementRef _element;
+    ElementRef container;
 
-    protected override async Task OnAfterRenderAsync()
+    protected override Task OnAfterRenderAsync()
     {
         if (ComponentContext.IsConnected)
         {
             if (IsVisible)
             {
-                await JSRuntime.InvokeAsync<bool>("__app.modal.show", _element, new DotNetObjectRef(this));
+                return JSRuntime.InvokeAsync<bool>("__app.modal.show", container, new DotNetObjectRef(this));
             }
             else
             {
-                await JSRuntime.InvokeAsync<bool>("__app.modal.close", _element, new DotNetObjectRef(this));
+                return JSRuntime.InvokeAsync<bool>("__app.modal.close", container, new DotNetObjectRef(this));
             }
         }
+        return Task.CompletedTask;
     }
 
     [JSInvokable]
-    public Task OnModalShownAsync() => Task.CompletedTask;
+    public Task OnModalShown() => Task.CompletedTask;
 
     [JSInvokable]
-    public Task OnModalClosedAsync() => OnClosed.InvokeAsync(null);
+    public Task OnModalClosed() => Closed.InvokeAsync(null);
 }

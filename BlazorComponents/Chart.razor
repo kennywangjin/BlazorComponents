@@ -14,12 +14,13 @@
     [Parameter] string Width { get; set; } = "100%";
     [Parameter] string Height { get; set; } = "600px";
 
-    protected async override Task OnAfterRenderAsync()
+    protected override Task OnAfterRenderAsync()
     {
         if (ComponentContext.IsConnected)
         {
-            await JSRuntime.InvokeAsync<object>("__app.chart.render", container, Option, IsLoading);
+            return JSRuntime.InvokeAsync<object>("__app.chart.render", container, Option, IsLoading);
         }
+        return Task.CompletedTask;
     }
 
     public void Dispose()
