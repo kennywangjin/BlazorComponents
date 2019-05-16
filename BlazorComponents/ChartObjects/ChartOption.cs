@@ -8,6 +8,6 @@ namespace BlazorComponents.ChartObjects
         public SubTitle Subtitle { get; set; }
         public IEnumerable<XAxis> XAxis { get; set; }
         public IEnumerable<YAxis> YAxis { get; set; }
-        public IEnumerable<Series> Series { get; set; }
+        public Series[] Series { get; set; }
     }
 }

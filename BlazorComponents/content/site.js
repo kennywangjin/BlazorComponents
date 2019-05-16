@@ -29,39 +29,40 @@
         return __assign.apply(this, arguments);
     };
 
-    var ChartObjects = new Map();
+    var CHART_OBJECTS = new Map();
     Highcharts.setOptions({
         credits: {
             enabled: false
-        }, lang: {
+        },
+        lang: {
             loading: ""
         }
     });
-    var render = function (container, options, loading) {
-        if (loading === void 0) { loading = false; }
-        var chart = ChartObjects.get(container);
+    function render(container, options, loading) {
+        var chart = CHART_OBJECTS.get(container);
         options = __assign({}, options, { tooltip: { xDateFormat: "%A, %b %e, %H:%M" } });
         if (!chart) {
-            // first time rendering
             chart = Highcharts.chart(container, options);
-            ChartObjects.set(container, chart);
-            if (loading)
-                chart.showLoading();
+            CHART_OBJECTS.set(container, chart);
         }
         else {
-            // chart updating
-            if (loading) {
-                chart.showLoading();
-            }
-            else {
-                chart.update(options);
-                if (!loading)
-                    chart.hideLoading();
-            }
+            options.series &&
+                options.series.forEach(function (series) {
+                    if (!series.data || series.data.length === 0) {
+                        delete series.data;
+                    }
+                });
+            chart.update(options);
         }
-    };
+        if (loading) {
+            chart.showLoading();
+        }
+        else {
+            chart.hideLoading();
+        }
+    }
     var destroy = function (container) {
-        var chart = ChartObjects.get(container);
+        var chart = CHART_OBJECTS.get(container);
         if (chart)
             chart.destroy();
     };

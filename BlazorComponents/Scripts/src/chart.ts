@@ -1,42 +1,43 @@
 ﻿import Highcharts, { Options, Chart } from "highcharts";
 
-const ChartObjects = new Map<HTMLElement, Chart>();
+const CHART_OBJECTS = new Map<HTMLElement, Chart>();
 
 Highcharts.setOptions({
     credits: {
         enabled: false
-    }, lang: {
+    },
+    lang: {
         loading: ""
     }
 });
 
-export const render = (
+export function render(
     container: HTMLElement,
-    options: Options,
-    loading: boolean = false
-) => {
-    let chart = ChartObjects.get(container);
-    options = {
-        ...options,
-        ...{ tooltip: { xDateFormat: "%A, %b %e, %H:%M" } }
-    };
+    options: Highcharts.Options,
+    loading: boolean
+) {
+    let chart = CHART_OBJECTS.get(container);
+    options = { ...options, tooltip: { xDateFormat: "%A, %b %e, %H:%M" } };
     if (!chart) {
-        // first time rendering
         chart = Highcharts.chart(container, options);
-        ChartObjects.set(container, chart);
-        if (loading) chart.showLoading();
+        CHART_OBJECTS.set(container, chart);
     } else {
-        // chart updating
-        if (loading) {
-            chart.showLoading();
-        } else {
-            chart.update(options);
-            if (!loading) chart.hideLoading();
-        }
+        options.series &&
+            options.series.forEach(series => {
+                if (!series.data || series.data.length === 0) {
+                    delete series.data;
+                }
+            });
+        chart.update(options);
     }
-};
+    if (loading) {
+        chart.showLoading();
+    } else {
+        chart.hideLoading();
+    }
+}
 
 export const destroy = (container: HTMLElement) => {
-    const chart = ChartObjects.get(container);
+    const chart = CHART_OBJECTS.get(container);
     if (chart) chart.destroy();
 };

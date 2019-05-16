@@ -1,17 +1,16 @@
 ﻿@using Microsoft.JSInterop
+@using BlazorComponents.ChartObjects
 @inject IJSRuntime JSRuntime
 @inject IComponentContext ComponentContext
 @implements IDisposable
-@using BlazorComponents.ChartObjects
 
-<div ref="@_container" style="width:@Width;height:@Height"></div>
+<div ref="@container" style="width:@Width;height:@Height"></div>
 
 @functions {
-    ElementRef _container;
-    bool isChartRendered = false;
+    ElementRef container;
 
     [Parameter] bool IsLoading { get; set; }
-    [Parameter] ChartOption Options { get; set; }
+    [Parameter] ChartOption Option { get; set; }
     [Parameter] string Width { get; set; } = "100%";
     [Parameter] string Height { get; set; } = "600px";
 
@@ -19,8 +18,7 @@
     {
         if (ComponentContext.IsConnected)
         {
-            await JSRuntime.InvokeAsync<string>("__app.chart.render", _container, IsLoading && isChartRendered ? null : Options, IsLoading);
-            isChartRendered = true;
+            await JSRuntime.InvokeAsync<object>("__app.chart.render", container, Option, IsLoading);
         }
     }
 
@@ -28,7 +26,7 @@
     {
         if (ComponentContext.IsConnected)
         {
-            JSRuntime.InvokeAsync<string>("__app.chart.destroy", _container);
+            JSRuntime.InvokeAsync<string>("__app.chart.destroy", container);
         }
     }
 }

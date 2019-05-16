@@ -1,7 +1,7 @@
 html {
   font-size: 14px; }
   html body {
-    font-family: "Lucida Grande","Lucida Sans Unicode",Arial,Helvetica,sans-serif; }
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif; }
 
 app {
   position: relative;
@@ -100,7 +100,7 @@ app {
     flex-shrink: 0; }
     .toolbar .form-group select.form-control {
       width: 15rem; }
-    .toolbar .form-group [type=date].form-control {
+    .toolbar .form-group [type="date"].form-control {
       width: 12rem; }
   .toolbar .search-box {
     width: 25rem;
@@ -156,8 +156,8 @@ app {
   width: 3rem;
   height: 3rem;
   vertical-align: text-bottom;
-  border: .25em solid currentColor;
+  border: 0.25em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
-  animation: spinner-border .75s linear infinite;
+  animation: spinner-border 0.75s linear infinite;
   color: #17a2b8; }
