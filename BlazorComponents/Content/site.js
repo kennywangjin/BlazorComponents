@@ -67,40 +67,80 @@
             chart.destroy();
     };
 
-    var show = function (element, dotnetModal) {
-        $(element)
-            .one("shown.bs.modal", function () {
-            dotnetModal.invokeMethodAsync("OnModalShownAsync");
-        })
-            .modal({
-            backdrop: "static",
-            keyboard: false
-        });
-    };
-    var close = function (element, dotnetModal) {
-        $(element)
+    var $Modals = new Map();
+    function show(element) {
+        if (!element)
+            return;
+        var $modal = $Modals.get(element);
+        if ($modal) {
+            $modal.modal("show");
+        }
+        else {
+            $modal = $(element).modal({
+                backdrop: "static",
+                keyboard: false
+            });
+            $Modals.set(element, $modal);
+        }
+    }
+    function close(element, dotnet) {
+        if (!element)
+            return;
+        var $modal = $Modals.get(element);
+        if (!$modal)
+            return;
+        $modal
             .one("hidden.bs.modal", function () {
-            $(element).modal("dispose");
-            dotnetModal.invokeMethodAsync("OnModalClosedAsync");
+            dispose(element);
+            dotnet.invokeMethodAsync("OnClosed");
         })
             .modal("hide");
-    };
+    }
+    function dispose(element) {
+        if (!element)
+            return;
+        var $modal = $Modals.get(element);
+        if (!$modal)
+            return;
+        $modal.modal("dispose");
+        $Modals.delete(element);
+    }
 
-    var show$1 = function (element, dotnetToast) {
-        $(element)
-            .one("shown.bs.toast", function () {
-            dotnetToast.invokeMethodAsync("OnToastShownAsync");
-        })
-            .toast("show");
-    };
-    var close$1 = function (element, dotnetToast) {
-        $(element)
+    var $Toasts = new Map();
+    function show$1(element) {
+        if (!element)
+            return;
+        var $toast = $Toasts.get(element);
+        if (!$toast) {
+            $toast = $(element).toast({
+                autohide: false
+            });
+            $Toasts.set(element, $toast);
+        }
+        $toast.toast("show");
+    }
+    function close$1(element, dotnet) {
+        if (!element)
+            return;
+        var $toast = $Toasts.get(element);
+        if (!$toast)
+            return;
+        $toast
             .one("hidden.bs.toast", function () {
-            $(element).toast("dispose");
-            dotnetToast.invokeMethodAsync("OnToastClosedAsync");
+            dispose$1(element);
+            dotnet.invokeMethodAsync("OnClosed");
         })
             .toast("hide");
-    };
+    }
+    function dispose$1(element) {
+        if (!element)
+            return;
+        var $toast = $Toasts.get(element);
+        if (!$toast)
+            return;
+        $toast.toast("dispose");
+        $Toasts.delete(element);
+    }
 
     (function (global) {
         global.__app = {
@@ -110,11 +150,13 @@
             },
             modal: {
                 show: show,
-                close: close
+                close: close,
+                dispose: dispose
             },
             toast: {
                 show: show$1,
-                close: close$1
+                close: close$1,
+                dispose: dispose$1
             }
         };
     })(window);

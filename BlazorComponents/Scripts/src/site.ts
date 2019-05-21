@@ -11,11 +11,13 @@ import "./site.scss";
         },
         modal: {
             show: Modal.show,
-            close: Modal.close
+            close: Modal.close,
+            dispose: Modal.dispose
         },
         toast: {
             show: Toast.show,
-            close: Toast.close
+            close: Toast.close,
+            dispose: Toast.dispose
         }
     };
 })(window);

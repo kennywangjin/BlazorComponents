@@ -1,64 +1,95 @@
 ﻿@using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
-@inject IComponentContext ComponentContext
+@inject IComponentContext Context
+@implements IDisposable
+@using System.Threading
 
-<div ref="@container" 
-     role="alert" 
-     aria-live="assertive" 
-     aria-atomic="true" 
-     class="toast" 
-     data-autohide="false" 
-     data-animation="true">
-    <div class="toast-header">
-        @ToastHeader
-        <button type="button" 
-                class="ml-2 mb-1 close" 
-                aria-label="Close" 
-                onclick="@Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+@if (IsVisible)
+{
+    <div ref="@container"
+         role="alert"
+         aria-live="assertive"
+         aria-atomic="true"
+         class="toast">
+        <div class="toast-header">
+            @ToastHeader
+            @if (IsCloseButtonVisible)
+            {
+                <button type="button"
+                        class="ml-2 mb-1 close"
+                        aria-label="Close"
+                        onclick="@Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            }
+        </div>
+        <div class="toast-body">
+            @ToastBody
+        </div>
     </div>
-    <div class="toast-body">
-        @ToastBody
-    </div>
-</div>
+}
 
 @functions {
-    ElementRef container;
-
     [Parameter] bool IsVisible { get; set; } = true;
     [Parameter] RenderFragment ToastHeader { get; set; }
     [Parameter] RenderFragment ToastBody { get; set; }
     [Parameter] bool IsAutoClose { get; set; } = true;
+    [Parameter] bool IsCloseButtonVisible { get; set; } = true;
     [Parameter] int Delay { get; set; } = 3000;
     [Parameter] EventCallback Close { get; set; }
     [Parameter] EventCallback Closed { get; set; }
 
-    protected override Task OnAfterRenderAsync()
+    ElementRef container;
+    bool isShown = false;
+    CancellationTokenSource? tokenSource;
+
+    protected override async Task OnAfterRenderAsync()
     {
-        if(ComponentContext.IsConnected)
+        if (Context.IsConnected && IsVisible && !isShown)
         {
-            if (IsVisible)
+            await JSRuntime.InvokeAsync<object>("__app.toast.show", container);
+            isShown = true;
+            if (IsAutoClose && Delay >= 1000)
             {
-                return JSRuntime.InvokeAsync<object>("__app.toast.show", container, new DotNetObjectRef(this));
-            }
-            else
-            {
-                return JSRuntime.InvokeAsync<object>("__app.toast.close", container, new DotNetObjectRef(this));
+                tokenSource = new CancellationTokenSource();
+                try
+                {
+                    await Task.Delay(Delay, tokenSource.Token);
+                    await InvokeAsync(async () => await Close.InvokeAsync(null));
+                }
+                catch (OperationCanceledException)
+                {
+
+                }
+
             }
         }
-        return Task.CompletedTask;
     }
 
-    [JSInvokable]
-    public Task OnToastShown()
+    protected override async Task OnParametersSetAsync()
     {
-        return Task.CompletedTask;
+        if (Context.IsConnected && !IsVisible && isShown)
+        {
+            tokenSource?.Cancel();
+            tokenSource?.Dispose();
+            await JSRuntime.InvokeAsync<object>("__app.toast.close", container, new DotNetObjectRef(this));
+            isShown = false;
+        }
     }
 
     [JSInvokable]
-    public Task OnToastClosed()
+    public Task OnClosed()
     {
         return Closed.InvokeAsync(null);
+    }
+
+    public void Dispose()
+    {
+        if (Context.IsConnected)
+        {
+            tokenSource?.Cancel();
+            tokenSource.Dispose();
+            _ = JSRuntime.InvokeAsync<object>("__app.toast.dispose", container);
+        }
     }
 }
