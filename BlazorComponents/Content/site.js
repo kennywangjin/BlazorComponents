@@ -29,29 +29,19 @@
         return __assign.apply(this, arguments);
     };
 
-    var CHART_OBJECTS = new Map();
+    var ChartCache = new Map();
     Highcharts.setOptions({
-        credits: {
-            enabled: false
-        },
-        lang: {
-            loading: ""
-        }
+        credits: { enabled: false },
+        lang: { loading: "" }
     });
     function render(container, options, loading) {
-        var chart = CHART_OBJECTS.get(container);
         options = __assign({}, options, { tooltip: { xDateFormat: "%A, %b %e, %H:%M" } });
+        var chart = ChartCache.get(container);
         if (!chart) {
             chart = Highcharts.chart(container, options);
-            CHART_OBJECTS.set(container, chart);
+            ChartCache.set(container, chart);
         }
         else {
-            options.series &&
-                options.series.forEach(function (series) {
-                    if (!series.data || series.data.length === 0) {
-                        delete series.data;
-                    }
-                });
             chart.update(options);
         }
         if (loading) {
@@ -61,17 +51,18 @@
             chart.hideLoading();
         }
     }
-    var destroy = function (container) {
-        var chart = CHART_OBJECTS.get(container);
+    function destroy(container) {
+        var chart = ChartCache.get(container);
         if (chart)
             chart.destroy();
-    };
+    }
+    var Chart = { render: render, destroy: destroy };
 
-    var $Modals = new Map();
+    var $ModalCache = new Map();
     function show(element) {
         if (!element)
             return;
-        var $modal = $Modals.get(element);
+        var $modal = $ModalCache.get(element);
         if ($modal) {
             $modal.modal("show");
         }
@@ -80,84 +71,75 @@
                 backdrop: "static",
                 keyboard: false
             });
-            $Modals.set(element, $modal);
+            $ModalCache.set(element, $modal);
         }
     }
     function close(element, dotnet) {
         if (!element)
             return;
-        var $modal = $Modals.get(element);
+        var $modal = $ModalCache.get(element);
         if (!$modal)
             return;
         $modal
             .one("hidden.bs.modal", function () {
             dispose(element);
-            dotnet.invokeMethodAsync("OnClosed");
+            dotnet.invokeMethodAsync("OnModalClosed");
         })
             .modal("hide");
     }
     function dispose(element) {
         if (!element)
             return;
-        var $modal = $Modals.get(element);
+        var $modal = $ModalCache.get(element);
         if (!$modal)
             return;
         $modal.modal("dispose");
-        $Modals.delete(element);
+        $ModalCache.delete(element);
     }
+    var Modal = { show: show, close: close, dispose: dispose };
 
-    var $Toasts = new Map();
+    var $ToastCache = new Map();
     function show$1(element) {
         if (!element)
             return;
-        var $toast = $Toasts.get(element);
+        var $toast = $ToastCache.get(element);
         if (!$toast) {
             $toast = $(element).toast({
                 autohide: false
             });
-            $Toasts.set(element, $toast);
+            $ToastCache.set(element, $toast);
         }
         $toast.toast("show");
     }
     function close$1(element, dotnet) {
         if (!element)
             return;
-        var $toast = $Toasts.get(element);
+        var $toast = $ToastCache.get(element);
         if (!$toast)
             return;
         $toast
             .one("hidden.bs.toast", function () {
             dispose$1(element);
-            dotnet.invokeMethodAsync("OnClosed");
+            dotnet.invokeMethodAsync("OnToastClosed");
         })
             .toast("hide");
     }
     function dispose$1(element) {
         if (!element)
             return;
-        var $toast = $Toasts.get(element);
+        var $toast = $ToastCache.get(element);
         if (!$toast)
             return;
         $toast.toast("dispose");
-        $Toasts.delete(element);
+        $ToastCache.delete(element);
     }
+    var Toast = { show: show$1, close: close$1, dispose: dispose$1 };
 
     (function (global) {
         global.__app = {
-            chart: {
-                render: render,
-                destroy: destroy
-            },
-            modal: {
-                show: show,
-                close: close,
-                dispose: dispose
-            },
-            toast: {
-                show: show$1,
-                close: close$1,
-                dispose: dispose$1
-            }
+            chart: Chart,
+            modal: Modal,
+            toast: Toast
         };
     })(window);
 

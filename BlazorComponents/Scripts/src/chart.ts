@@ -1,33 +1,23 @@
-﻿import Highcharts, { Options, Chart } from "highcharts";
+﻿import Highcharts from "highcharts";
 
-const CHART_OBJECTS = new Map<HTMLElement, Chart>();
+const ChartCache = new Map<HTMLElement, Highcharts.Chart>();
 
 Highcharts.setOptions({
-    credits: {
-        enabled: false
-    },
-    lang: {
-        loading: ""
-    }
+    credits: { enabled: false },
+    lang: { loading: "" }
 });
 
-export function render(
+function render(
     container: HTMLElement,
     options: Highcharts.Options,
     loading: boolean
 ) {
-    let chart = CHART_OBJECTS.get(container);
     options = { ...options, tooltip: { xDateFormat: "%A, %b %e, %H:%M" } };
+    let chart = ChartCache.get(container);
     if (!chart) {
         chart = Highcharts.chart(container, options);
-        CHART_OBJECTS.set(container, chart);
+        ChartCache.set(container, chart);
     } else {
-        options.series &&
-            options.series.forEach(series => {
-                if (!series.data || series.data.length === 0) {
-                    delete series.data;
-                }
-            });
         chart.update(options);
     }
     if (loading) {
@@ -37,7 +27,9 @@ export function render(
     }
 }
 
-export const destroy = (container: HTMLElement) => {
-    const chart = CHART_OBJECTS.get(container);
+function destroy(container: HTMLElement) {
+    const chart = ChartCache.get(container);
     if (chart) chart.destroy();
-};
+}
+
+export const Chart = { render, destroy };

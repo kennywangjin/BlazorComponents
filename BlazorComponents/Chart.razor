@@ -7,12 +7,12 @@
 <div ref="@container" style="width:@Width;height:@Height"></div>
 
 @functions {
-    ElementRef container;
-
     [Parameter] bool IsLoading { get; set; }
     [Parameter] ChartOption Option { get; set; }
     [Parameter] string Width { get; set; } = "100%";
     [Parameter] string Height { get; set; } = "600px";
+
+    ElementRef container;
 
     protected override Task OnAfterRenderAsync()
     {

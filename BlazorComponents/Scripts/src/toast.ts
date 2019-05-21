@@ -1,33 +1,35 @@
-const $Toasts = new Map<HTMLElement, JQuery>();
+const $ToastCache = new Map<HTMLElement, JQuery>();
 
-export function show(element: HTMLElement | null) {
+function show(element: HTMLElement | null) {
     if (!element) return;
-    let $toast = $Toasts.get(element);
+    let $toast = $ToastCache.get(element);
     if (!$toast) {
         $toast = $(element).toast({
             autohide: false
         });
-        $Toasts.set(element, $toast);
+        $ToastCache.set(element, $toast);
     }
     $toast.toast("show");
 }
 
-export function close(element: HTMLElement | null, dotnet: any) {
+function close(element: HTMLElement | null, dotnet: any) {
     if (!element) return;
-    const $toast = $Toasts.get(element);
+    const $toast = $ToastCache.get(element);
     if (!$toast) return;
     $toast
         .one("hidden.bs.toast", () => {
             dispose(element);
-            dotnet.invokeMethodAsync("OnClosed");
+            dotnet.invokeMethodAsync("OnToastClosed");
         })
         .toast("hide");
 }
 
-export function dispose(element: HTMLElement | null) {
+function dispose(element: HTMLElement | null) {
     if (!element) return;
-    const $toast = $Toasts.get(element);
+    const $toast = $ToastCache.get(element);
     if (!$toast) return;
     $toast.toast("dispose");
-    $Toasts.delete(element);
+    $ToastCache.delete(element);
 }
+
+export const Toast = { show, close, dispose };

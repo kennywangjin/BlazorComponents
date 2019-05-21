@@ -1,8 +1,8 @@
-const $Modals = new Map<HTMLElement, JQuery>();
+const $ModalCache = new Map<HTMLElement, JQuery>();
 
-export function show(element: HTMLElement | null) {
+function show(element: HTMLElement | null) {
     if (!element) return;
-    let $modal = $Modals.get(element);
+    let $modal = $ModalCache.get(element);
     if ($modal) {
         $modal.modal("show");
     } else {
@@ -10,26 +10,28 @@ export function show(element: HTMLElement | null) {
             backdrop: "static",
             keyboard: false
         });
-        $Modals.set(element, $modal);
+        $ModalCache.set(element, $modal);
     }
 }
 
-export function close(element: HTMLElement | null, dotnet: any) {
+function close(element: HTMLElement | null, dotnet: any) {
     if (!element) return;
-    const $modal = $Modals.get(element);
+    const $modal = $ModalCache.get(element);
     if (!$modal) return;
     $modal
         .one("hidden.bs.modal", () => {
             dispose(element);
-            dotnet.invokeMethodAsync("OnClosed");
+            dotnet.invokeMethodAsync("OnModalClosed");
         })
         .modal("hide");
 }
 
-export function dispose(element: HTMLElement | null) {
+function dispose(element: HTMLElement | null) {
     if (!element) return;
-    const $modal = $Modals.get(element);
+    const $modal = $ModalCache.get(element);
     if (!$modal) return;
     $modal.modal("dispose");
-    $Modals.delete(element);
+    $ModalCache.delete(element);
 }
+
+export const Modal = { show, close, dispose };

@@ -1,23 +1,12 @@
-import * as Chart from "./chart";
-import * as Modal from "./modal";
-import * as Toast from "./toast";
+import { Chart } from "./chart";
+import { Modal } from "./modal";
+import { Toast } from "./toast";
 import "./site.scss";
 
 (function(global: any) {
     global.__app = {
-        chart: {
-            render: Chart.render,
-            destroy: Chart.destroy
-        },
-        modal: {
-            show: Modal.show,
-            close: Modal.close,
-            dispose: Modal.dispose
-        },
-        toast: {
-            show: Toast.show,
-            close: Toast.close,
-            dispose: Toast.dispose
-        }
+        chart: Chart,
+        modal: Modal,
+        toast: Toast
     };
 })(window);

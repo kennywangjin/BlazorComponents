@@ -68,7 +68,7 @@
     }
 
     [JSInvokable]
-    public Task OnClosed() => Closed.InvokeAsync(null);
+    public Task OnModalClosed() => Closed.InvokeAsync(null);
 
     public void Dispose()
     {

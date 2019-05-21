@@ -2,7 +2,7 @@
 {
     public class YAxisTitle
     {
-        public string Text { get; }
+        public string Text { get; set; }
 
         public YAxisTitle(string text)
         {
