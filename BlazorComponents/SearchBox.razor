@@ -1,4 +1,4 @@
-﻿<div class="input-group search-box mr-4">
+﻿<div class=@($"input-group search-box {ContainerClass}")>
     <div class="input-group-prepend">
         <span class="input-group-text" id="search">
             <i class="fas fa-search"></i>
@@ -10,10 +10,11 @@
            aria-label="search" 
            aria-describedby="search" 
            value="@Text" 
-           onchange="@(e=>Search.InvokeAsync((string)e.Value))" />
+           onchange="@(e=>OnSearch.InvokeAsync((string)e.Value))" />
 </div>
 
 @functions {
     [Parameter] string Text { get; set; }
-    [Parameter] EventCallback<string> Search { get; set; }
+    [Parameter] EventCallback<string> OnSearch { get; set; }
+    [Parameter] string ContainerClass { get; set; } = string.Empty;
 }

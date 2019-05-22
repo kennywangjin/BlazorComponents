@@ -3,7 +3,7 @@
     <nav aria-label="Page navigation">
         <ul class="pagination mb-0">
             <li class="@GetPageItemCssClass(PageIndex-1)">
-                <span class="page-link" aria-label="Previous" onclick="@(()=>OnPaginate(PageIndex-1))">
+                <span class="page-link" aria-label="Previous" onclick="@(()=>OnPaginatePage(PageIndex-1))">
                     <span aria-hidden="true">&laquo;</span>
                 </span>
             </li>
@@ -13,7 +13,7 @@
                 {
                     int page = i;
                     <li class="@GetPageItemCssClass(page)">
-                        <span class="page-link" onclick="@(()=> OnPaginate(page))">@(page + 1)</span>
+                        <span class="page-link" onclick="@(()=> OnPaginatePage(page))">@(page + 1)</span>
                     </li>
                 }
             }
@@ -23,20 +23,20 @@
                 {
                     int page = i;
                     <li class="@GetPageItemCssClass(page)">
-                        <span class="page-link" onclick="@(()=> OnPaginate(page))">@(page + 1)</span>
+                        <span class="page-link" onclick="@(()=> OnPaginatePage(page))">@(page + 1)</span>
                     </li>
                 }
                 <li class="page-item">
                     <span class="page-link">...</span>
                 </li>
                 <li class="page-item">
-                    <span class="page-link" onclick="@(()=>OnPaginate(PageCount-1))">@PageCount</span>
+                    <span class="page-link" onclick="@(()=>OnPaginatePage(PageCount-1))">@PageCount</span>
                 </li>
             }
             else if (PageIndex >= (PageCount - sideVisible - 2))
             {
                 <li class="page-item">
-                    <span class="page-link" onclick="@(()=>OnPaginate(0))">1</span>
+                    <span class="page-link" onclick="@(()=>OnPaginatePage(0))">1</span>
                 </li>
                 <li class="page-item">
                     <span class="page-link">...</span>
@@ -45,14 +45,14 @@
                 {
                     int page = i;
                     <li class="@GetPageItemCssClass(page)">
-                        <span class="page-link" onclick="@(()=> OnPaginate(page))">@(page + 1)</span>
+                        <span class="page-link" onclick="@(()=> OnPaginatePage(page))">@(page + 1)</span>
                     </li>
                 }
             }
             else
             {
                 <li class="page-item">
-                    <span class="page-link" onclick="@(()=>OnPaginate(0))">1</span>
+                    <span class="page-link" onclick="@(()=>OnPaginatePage(0))">1</span>
                 </li>
                 <li class="page-item">
                     <span class="page-link">...</span>
@@ -61,18 +61,18 @@
                 {
                     int page = i;
                     <li class="@GetPageItemCssClass(page)">
-                        <span class="page-link" onclick="@(()=> OnPaginate(page))">@(page + 1)</span>
+                        <span class="page-link" onclick="@(()=> OnPaginatePage(page))">@(page + 1)</span>
                     </li>
                 }
                 <li class="page-item">
                     <span class="page-link">...</span>
                 </li>
                 <li class="page-item">
-                    <span class="page-link" onclick="@(()=>OnPaginate(PageCount-1))">@PageCount</span>
+                    <span class="page-link" onclick="@(()=>OnPaginatePage(PageCount-1))">@PageCount</span>
                 </li>
             }
             <li class="@GetPageItemCssClass(PageIndex+1)">
-                <span class="page-link" aria-label="Next" onclick="@(()=>OnPaginate(PageIndex+1))">
+                <span class="page-link" aria-label="Next" onclick="@(()=>OnPaginatePage(PageIndex+1))">
                     <span aria-hidden="true">&raquo;</span>
                 </span>
             </li>
@@ -90,7 +90,7 @@
     [Parameter] int PageIndex { get; set; }
     [Parameter] int PageCount { get; set; } = 1;
     [Parameter] int Total { get; set; }
-    [Parameter] EventCallback<int> Paginate { get; set; }
+    [Parameter] EventCallback<int> OnPaginate { get; set; }
 
     const int sideVisible = 2;
 
@@ -108,13 +108,13 @@
         return klass;
     }
 
-    Task OnPaginate(int page)
+    Task OnPaginatePage(int page)
     {
         if (page != PageIndex &&
             page < PageCount &&
             page > -1)
         {
-            return Paginate.InvokeAsync(page);
+            return OnPaginate.InvokeAsync(page);
         }
         return Task.CompletedTask;
     }

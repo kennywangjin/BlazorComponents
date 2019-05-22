@@ -16,7 +16,7 @@
             <button type="button"
                     class="ml-2 mb-1 close"
                     aria-label="Close"
-                    onclick="@Close">
+                    onclick="@OnClose">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -32,8 +32,8 @@
     [Parameter] RenderFragment ToastBody { get; set; }
     [Parameter] bool IsAutoClose { get; set; } = true;
     [Parameter] int Delay { get; set; } = 3000;
-    [Parameter] EventCallback Close { get; set; }
-    [Parameter] EventCallback Closed { get; set; }
+    [Parameter] EventCallback OnClose { get; set; }
+    [Parameter] EventCallback OnClosed { get; set; }
 
     ElementRef container;
     bool isShown = false;
@@ -51,7 +51,7 @@
                 try
                 {
                     await Task.Delay(Delay, tokenSource.Token);
-                    await InvokeAsync(async () => await Close.InvokeAsync(null));
+                    await InvokeAsync(async () => await OnClose.InvokeAsync(null));
                 }
                 catch (OperationCanceledException)
                 {
@@ -75,7 +75,7 @@
     [JSInvokable]
     public Task OnToastClosed()
     {
-        return Closed.InvokeAsync(null);
+        return OnClosed.InvokeAsync(null);
     }
 
     public void Dispose()
