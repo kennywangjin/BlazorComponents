@@ -1,8 +1,6 @@
-﻿@using Microsoft.JSInterop
-@inject IJSRuntime JSRuntime
+﻿@inject IJSRuntime JSRuntime
 @inject IComponentContext Context
 @implements IDisposable
-@using System.Threading
 
 @if (IsVisible)
 {
@@ -30,14 +28,11 @@
     [Parameter] bool IsVisible { get; set; } = true;
     [Parameter] RenderFragment ToastHeader { get; set; }
     [Parameter] RenderFragment ToastBody { get; set; }
-    [Parameter] bool IsAutoClose { get; set; } = true;
-    [Parameter] int Delay { get; set; } = 3000;
     [Parameter] EventCallback OnClose { get; set; }
     [Parameter] EventCallback OnClosed { get; set; }
 
     ElementRef container;
     bool isShown = false;
-    CancellationTokenSource? tokenSource;
 
     protected override async Task OnAfterRenderAsync()
     {
@@ -45,31 +40,17 @@
         {
             await JSRuntime.InvokeAsync<object>("__app.toast.show", container);
             isShown = true;
-            if (IsAutoClose && Delay >= 1000)
-            {
-                tokenSource = new CancellationTokenSource();
-                try
-                {
-                    await Task.Delay(Delay, tokenSource.Token);
-                    await InvokeAsync(async () => await OnClose.InvokeAsync(null));
-                }
-                catch (OperationCanceledException)
-                {
-
-                }
-            }
         }
     }
 
-    protected override async Task OnParametersSetAsync()
+    public override async Task SetParametersAsync(ParameterCollection parameters)
     {
-        if (Context.IsConnected && !IsVisible && isShown)
+        if (Context.IsConnected && parameters.TryGetValue(nameof(IsVisible), out bool visible) && !visible && isShown)
         {
-            tokenSource?.Cancel();
-            tokenSource?.Dispose();
             await JSRuntime.InvokeAsync<object>("__app.toast.close", container, new DotNetObjectRef(this));
             isShown = false;
         }
+        await base.SetParametersAsync(parameters);
     }
 
     [JSInvokable]
@@ -82,8 +63,6 @@
     {
         if (Context.IsConnected)
         {
-            tokenSource?.Cancel();
-            tokenSource?.Dispose();
             _ = JSRuntime.InvokeAsync<object>("__app.toast.dispose", container);
         }
     }

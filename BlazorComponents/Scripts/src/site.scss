@@ -87,16 +87,19 @@ app {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.valid.modified:not([type="checkbox"]) {
-    outline: 1px solid #26b050;
-}
+// .valid.modified:not([type="checkbox"]) {
+//     outline: 1px solid #26b050;
+// }
 
-.invalid {
-    outline: 1px solid red;
-}
+// .invalid {
+//     outline: 1px solid red;
+// }
 
 .validation-message {
-    color: red;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 90%;
+    color: #dc3545;
 }
 
 @media (max-width: 767.98px) {
@@ -220,4 +223,24 @@ app {
     border-radius: 50%;
     animation: spinner-border 0.75s linear infinite;
     color: #17a2b8;
+}
+
+.form-control:not([type="checkbox"]),
+.custom-select {
+    &.invalid {
+        border-color: #dc3545;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23dc3545' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23dc3545' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+    &.modified.valid {
+        border-color: #28a745;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+    }
+    padding-right: calc(1.5em + 0.75rem);
+    background-repeat: no-repeat;
+    background-position: center right calc(0.375em + 0.1875rem);
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }

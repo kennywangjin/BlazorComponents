@@ -13,15 +13,20 @@ function show(element: HTMLElement | null) {
 }
 
 function close(element: HTMLElement | null, dotnet: any) {
-    if (!element) return;
-    const $toast = $ToastCache.get(element);
-    if (!$toast) return;
-    $toast
-        .one("hidden.bs.toast", () => {
-            dispose(element);
-            dotnet.invokeMethodAsync("OnToastClosed");
-        })
-        .toast("hide");
+    if (element) {
+        const $toast = $ToastCache.get(element);
+        if ($toast) {
+            return new Promise<void>(resolve => {
+                $toast
+                    .one("hidden.bs.toast", () => {
+                        dispose(element);
+                        resolve();
+                        dotnet.invokeMethodAsync("OnToastClosed");
+                    })
+                    .toast("hide");
+            });
+        }
+    }
 }
 
 function dispose(element: HTMLElement | null) {

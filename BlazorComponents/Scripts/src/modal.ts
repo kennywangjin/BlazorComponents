@@ -15,15 +15,21 @@ function show(element: HTMLElement | null) {
 }
 
 function close(element: HTMLElement | null, dotnet: any) {
-    if (!element) return;
-    const $modal = $ModalCache.get(element);
-    if (!$modal) return;
-    $modal
-        .one("hidden.bs.modal", () => {
-            dispose(element);
-            dotnet.invokeMethodAsync("OnModalClosed");
-        })
-        .modal("hide");
+    if (element) {
+        const $modal = $ModalCache.get(element);
+        if ($modal) {
+            return new Promise<void>(resolve => {
+                $modal
+                    .one("hidden.bs.modal", () => {
+                        dispose(element);
+                        resolve();
+                        dotnet.invokeMethodAsync("OnModalClosed");
+                    })
+                    .modal("hide");
+            });
+        }
+    }
+    return Promise.resolve();
 }
 
 function dispose(element: HTMLElement | null) {

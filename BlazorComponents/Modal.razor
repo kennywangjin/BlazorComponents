@@ -1,37 +1,13 @@
-﻿@using Microsoft.JSInterop
-@inject IJSRuntime JSRuntime
-@inject IComponentContext Context
+﻿@inject IJSRuntime JSRuntime
+@inject IComponentContext ComponentContext
 @implements IDisposable
 
 @if (IsVisible)
 {
-    <div ref="@container"
-         class="modal fade"
-         tabindex="-1"
-         role="dialog">
-        <div class="@($"modal-dialog {Size.GetCssClass()}")" role="document">
+    <div ref="@_element" class="modal fade" tabindex="-1" role="dialog">
+        <div class="@DialogClass" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        @ModalTitle
-                    </h5>
-                    <button type="button"
-                            class="close"
-                            aria-label="Close"
-                            onclick="@OnClose">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @ModalBody
-                </div>
-                <div class="modal-footer">
-                    @ModalFooter
-                    <button class="btn btn-secondary" type="button" onclick="@OnClose">
-                        <i class="fas fa-times mr-2" aria-hidden="true"></i>
-                        <span>Close</span>
-                    </button>
-                </div>
+                @ChildContent
             </div>
         </div>
     </div>
@@ -40,31 +16,55 @@
 @functions {
     [Parameter] bool IsVisible { get; set; } = true;
     [Parameter] ModalSize Size { get; set; } = ModalSize.Default;
-    [Parameter] RenderFragment ModalTitle { get; set; }
-    [Parameter] RenderFragment ModalBody { get; set; }
-    [Parameter] RenderFragment ModalFooter { get; set; }
+    [Parameter] RenderFragment ChildContent { get; set; }
     [Parameter] EventCallback OnClose { get; set; }
     [Parameter] EventCallback OnClosed { get; set; }
 
-    ElementRef container;
-    bool isShown = false;
-
-    protected override async Task OnAfterRenderAsync()
+    string DialogClass
     {
-        if (Context.IsConnected && IsVisible && !isShown)
+        get
         {
-            await JSRuntime.InvokeAsync<object>("__app.modal.show", container);
-            isShown = true;
+            string klass = "modal-dialog";
+            switch (Size)
+            {
+                case ModalSize.Small:
+                    klass += " modal-sm";
+                    break;
+                case ModalSize.Large:
+                    klass += " modal-lg";
+                    break;
+                case ModalSize.ExtraLarge:
+                    klass += " modal-xl";
+                    break;
+                case ModalSize.Default:
+                default:
+                    break;
+            }
+            return klass;
         }
     }
 
-    protected override async Task OnParametersSetAsync()
+    ElementRef _element;
+    bool _isShown = false;
+
+    protected override async Task OnAfterRenderAsync()
     {
-        if (Context.IsConnected && !IsVisible && isShown)
+        if (ComponentContext.IsConnected && IsVisible && !_isShown)
         {
-            await JSRuntime.InvokeAsync<object>("__app.modal.close",container, new DotNetObjectRef(this));
-            isShown = false;
+            await JSRuntime.InvokeAsync<object>("__app.modal.show", _element);
+            _isShown = true;
         }
+    }
+
+    public override async Task SetParametersAsync(ParameterCollection parameters)
+    {
+        if (ComponentContext.IsConnected && _isShown &&
+            parameters.TryGetValue(nameof(IsVisible), out bool result) && !result)
+        {
+            await JSRuntime.InvokeAsync<object>("__app.modal.close", _element, new DotNetObjectRef(this));
+            _isShown = false;
+        }
+        await base.SetParametersAsync(parameters);
     }
 
     [JSInvokable]
@@ -72,10 +72,9 @@
 
     public void Dispose()
     {
-        if (!Context.IsConnected)
+        if (ComponentContext.IsConnected)
         {
-            return;
+            _ = JSRuntime.InvokeAsync<object>("__app.modal.dispose", _element);
         }
-        _ = JSRuntime.InvokeAsync<object>("__app.modal.dispose", container);
     }
 }

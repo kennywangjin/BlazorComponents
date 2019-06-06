@@ -57,6 +57,7 @@
             chart.destroy();
     }
     var Chart = { render: render, destroy: destroy };
+    //# sourceMappingURL=chart.js.map
 
     var $ModalCache = new Map();
     function show(element) {
@@ -75,17 +76,21 @@
         }
     }
     function close(element, dotnet) {
-        if (!element)
-            return;
-        var $modal = $ModalCache.get(element);
-        if (!$modal)
-            return;
-        $modal
-            .one("hidden.bs.modal", function () {
-            dispose(element);
-            dotnet.invokeMethodAsync("OnModalClosed");
-        })
-            .modal("hide");
+        if (element) {
+            var $modal_1 = $ModalCache.get(element);
+            if ($modal_1) {
+                return new Promise(function (resolve) {
+                    $modal_1
+                        .one("hidden.bs.modal", function () {
+                        dispose(element);
+                        resolve();
+                        dotnet.invokeMethodAsync("OnModalClosed");
+                    })
+                        .modal("hide");
+                });
+            }
+        }
+        return Promise.resolve();
     }
     function dispose(element) {
         if (!element)
@@ -97,6 +102,7 @@
         $ModalCache.delete(element);
     }
     var Modal = { show: show, close: close, dispose: dispose };
+    //# sourceMappingURL=modal.js.map
 
     var $ToastCache = new Map();
     function show$1(element) {
@@ -112,17 +118,20 @@
         $toast.toast("show");
     }
     function close$1(element, dotnet) {
-        if (!element)
-            return;
-        var $toast = $ToastCache.get(element);
-        if (!$toast)
-            return;
-        $toast
-            .one("hidden.bs.toast", function () {
-            dispose$1(element);
-            dotnet.invokeMethodAsync("OnToastClosed");
-        })
-            .toast("hide");
+        if (element) {
+            var $toast_1 = $ToastCache.get(element);
+            if ($toast_1) {
+                return new Promise(function (resolve) {
+                    $toast_1
+                        .one("hidden.bs.toast", function () {
+                        dispose$1(element);
+                        resolve();
+                        dotnet.invokeMethodAsync("OnToastClosed");
+                    })
+                        .toast("hide");
+                });
+            }
+        }
     }
     function dispose$1(element) {
         if (!element)
@@ -134,6 +143,7 @@
         $ToastCache.delete(element);
     }
     var Toast = { show: show$1, close: close$1, dispose: dispose$1 };
+    //# sourceMappingURL=toast.js.map
 
     (function (global) {
         global.__app = {
@@ -142,5 +152,6 @@
             toast: Toast
         };
     })(window);
+    //# sourceMappingURL=site.js.map
 
 }(Highcharts));

@@ -1,0 +1,35 @@
+﻿<Modal IsVisible="@Model.IsVisible"
+       Size="@Size"
+       OnClose="@Model.Close"
+       OnClosed="@Model.OnClosed">
+    <EditForm Model="@Model" OnValidSubmit="@Model.OnValidSubmit">
+        <DataAnnotationsValidator />
+        <ModalHeader>
+            <i class="@($"fas fa-{TitleIcon}")" aria-hidden="true"></i>
+            <span class="ml-1">@TitleText</span>
+        </ModalHeader>
+        <ModalBody>
+            @ChildContent
+        </ModalBody>
+        <ModalFooter>
+            <button type="submit" class="btn btn-primary">
+                <i class="@($"fas fa-{SubmitIcon}")" aria-hidden="true"></i>
+                <span class="ml-1">@SubmitText</span>
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="@Model.Close">
+                <i class="fas fa-times" aria-hidden="true"></i>
+                <span class="ml-1">Close</span>
+            </button>
+        </ModalFooter>
+    </EditForm>
+</Modal>
+
+@functions {
+    [Parameter] ModalFormModel Model { get; set; }
+    [Parameter] string TitleText { get; set; } = "Form Title";
+    [Parameter] string TitleIcon { get; set; } = "plus";
+    [Parameter] string SubmitText { get; set; } = "Save";
+    [Parameter] string SubmitIcon { get; set; } = "save";
+    [Parameter] ModalSize Size { get; set; } = ModalSize.Default;
+    [Parameter] RenderFragment ChildContent { get; set; }
+}
