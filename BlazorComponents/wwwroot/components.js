@@ -60,54 +60,64 @@
     //# sourceMappingURL=chart.js.map
 
     var $ModalCache = new Map();
-    function show(element) {
-        if (!element)
-            return;
-        var $modal = $ModalCache.get(element);
-        if ($modal) {
-            $modal.modal("show");
+    function open(element) {
+        if (!element) {
+            return Promise.resolve(true);
         }
-        else {
+        var $modal = $ModalCache.get(element);
+        if (!$modal) {
             $modal = $(element).modal({
                 backdrop: "static",
-                keyboard: false
+                keyboard: false,
+                show: false
             });
             $ModalCache.set(element, $modal);
         }
+        return new Promise(function (resolve) {
+            $modal
+                .one("shown.bs.modal", function () {
+                resolve(true);
+            })
+                .modal("show");
+        });
     }
-    function close(element, dotnet) {
-        if (element) {
-            var $modal_1 = $ModalCache.get(element);
-            if ($modal_1) {
-                return new Promise(function (resolve) {
-                    $modal_1
-                        .one("hidden.bs.modal", function () {
-                        dispose(element);
-                        resolve();
-                        dotnet.invokeMethodAsync("OnModalClosed");
-                    })
-                        .modal("hide");
-                });
-            }
+    function close(element) {
+        if (!element) {
+            return Promise.resolve(true);
         }
-        return Promise.resolve();
+        var $modal = $ModalCache.get(element);
+        if (!$modal) {
+            return Promise.resolve(true);
+        }
+        return new Promise(function (resolve) {
+            $modal
+                .one("hidden.bs.modal", function () {
+                dispose(element);
+                resolve(true);
+            })
+                .modal("hide");
+        });
     }
     function dispose(element) {
-        if (!element)
-            return;
+        if (!element) {
+            return true;
+        }
         var $modal = $ModalCache.get(element);
-        if (!$modal)
-            return;
+        if (!$modal) {
+            return true;
+        }
         $modal.modal("dispose");
         $ModalCache.delete(element);
+        return true;
     }
-    var Modal = { show: show, close: close, dispose: dispose };
+    var Modal = { open: open, close: close, dispose: dispose };
     //# sourceMappingURL=modal.js.map
 
     var $ToastCache = new Map();
-    function show$1(element) {
-        if (!element)
-            return;
+    function open$1(element) {
+        if (!element) {
+            return Promise.resolve(true);
+        }
         var $toast = $ToastCache.get(element);
         if (!$toast) {
             $toast = $(element).toast({
@@ -115,43 +125,53 @@
             });
             $ToastCache.set(element, $toast);
         }
-        $toast.toast("show");
+        return new Promise(function (resolve) {
+            $toast
+                .one("shown.bs.toast", function () {
+                resolve(true);
+            })
+                .toast("show");
+        });
     }
-    function close$1(element, dotnet) {
-        if (element) {
-            var $toast_1 = $ToastCache.get(element);
-            if ($toast_1) {
-                return new Promise(function (resolve) {
-                    $toast_1
-                        .one("hidden.bs.toast", function () {
-                        dispose$1(element);
-                        resolve();
-                        dotnet.invokeMethodAsync("OnToastClosed");
-                    })
-                        .toast("hide");
-                });
-            }
+    function close$1(element) {
+        if (!element) {
+            return Promise.resolve(true);
         }
+        var $toast = $ToastCache.get(element);
+        if (!$toast) {
+            return Promise.resolve(true);
+        }
+        return new Promise(function (resolve) {
+            $toast
+                .one("hidden.bs.toast", function () {
+                dispose$1(element);
+                resolve(true);
+            })
+                .toast("hide");
+        });
     }
     function dispose$1(element) {
-        if (!element)
-            return;
+        if (!element) {
+            return true;
+        }
         var $toast = $ToastCache.get(element);
-        if (!$toast)
-            return;
+        if (!$toast) {
+            return true;
+        }
         $toast.toast("dispose");
         $ToastCache.delete(element);
+        return true;
     }
-    var Toast = { show: show$1, close: close$1, dispose: dispose$1 };
+    var Toast = { open: open$1, close: close$1, dispose: dispose$1 };
     //# sourceMappingURL=toast.js.map
 
     (function (global) {
-        global.__app = {
+        global.__components = {
             chart: Chart,
             modal: Modal,
             toast: Toast
         };
     })(window);
-    //# sourceMappingURL=site.js.map
+    //# sourceMappingURL=components.js.map
 
 }(Highcharts));

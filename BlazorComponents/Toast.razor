@@ -4,7 +4,7 @@
 
 @if (IsVisible)
 {
-    <div ref="@container"
+    <div @ref="element"
          role="alert"
          aria-live="assertive"
          aria-atomic="true"
@@ -14,7 +14,7 @@
             <button type="button"
                     class="ml-2 mb-1 close"
                     aria-label="Close"
-                    onclick="@OnClose">
+                    @onclick="@OnClose">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -24,46 +24,42 @@
     </div>
 }
 
-@functions {
+@code {
     [Parameter] bool IsVisible { get; set; } = true;
     [Parameter] RenderFragment ToastHeader { get; set; }
     [Parameter] RenderFragment ToastBody { get; set; }
     [Parameter] EventCallback OnClose { get; set; }
     [Parameter] EventCallback OnClosed { get; set; }
 
-    ElementRef container;
-    bool isShown = false;
+    ElementRef element;
+    bool isOpen = false;
 
     protected override async Task OnAfterRenderAsync()
     {
-        if (Context.IsConnected && IsVisible && !isShown)
+        if (Context.IsConnected && IsVisible && !isOpen)
         {
-            await JSRuntime.InvokeAsync<object>("__app.toast.show", container);
-            isShown = true;
+            await JSRuntime.InvokeAsync<bool>("__components.toast.open", element);
+            isOpen = true;
         }
     }
 
     public override async Task SetParametersAsync(ParameterCollection parameters)
     {
-        if (Context.IsConnected && parameters.TryGetValue(nameof(IsVisible), out bool visible) && !visible && isShown)
+        if (Context.IsConnected && isOpen &&
+        parameters.TryGetValue(nameof(IsVisible), out bool result) && !result)
         {
-            await JSRuntime.InvokeAsync<object>("__app.toast.close", container, new DotNetObjectRef(this));
-            isShown = false;
+            await JSRuntime.InvokeAsync<bool>("__components.toast.close", element);
+            isOpen = false;
+            await OnClosed.InvokeAsync(null);
         }
         await base.SetParametersAsync(parameters);
-    }
-
-    [JSInvokable]
-    public Task OnToastClosed()
-    {
-        return OnClosed.InvokeAsync(null);
     }
 
     public void Dispose()
     {
         if (Context.IsConnected)
         {
-            _ = JSRuntime.InvokeAsync<object>("__app.toast.dispose", container);
+            _ = JSRuntime.InvokeAsync<bool>("__components.toast.dispose", element);
         }
     }
 }

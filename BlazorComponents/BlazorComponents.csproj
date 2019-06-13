@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <AddRazorSupportForMvc>True</AddRazorSupportForMvc>
-    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <LangVersion>8.0</LangVersion>
     <NullableContextOptions>enable</NullableContextOptions>
   </PropertyGroup>
@@ -12,9 +11,8 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-  <Target Name="PublishScripts" BeforeTargets="Publish">
-    <Message Importance="High" Text="Compiling scripts..." />
-    <Exec WorkingDirectory="Scripts" Command="npm run build:prod" ConsoleToMsBuild="true" />
-  </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorComponents.Client\BlazorComponents.Client.csproj" />
+  </ItemGroup>
 
 </Project>

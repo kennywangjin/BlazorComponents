@@ -1,0 +1,24 @@
+<li class="@CssClass">
+    <span class="page-link" @onclick="@(()=>OnPaginate.InvokeAsync(Page))">
+        @ChildContent
+    </span>
+</li>
+
+@code {
+    [Parameter] int Page { get; set; }
+    [Parameter] RenderFragment ChildContent { get; set; }
+    [Parameter] EventCallback<int> OnPaginate { get; set; }
+    [Parameter] int PageCount { get; set; }
+    [Parameter] int PageIndex { get; set; }
+
+    string CssClass
+    {
+        get
+        {
+            string css = "page-item";
+            if (Page == PageIndex) { css += " active"; }
+            if (Page < 0 || Page > PageCount - 1) { css += " disabled"; }
+            return css;
+        }
+    }
+}

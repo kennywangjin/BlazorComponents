@@ -1,5 +1,5 @@
 {
-  "name": "my.blazorcomponents.scripts",
+  "name": "blazorcomponents.client",
   "version": "1.0.0",
   "description": "client scripts and styles for blazor components",
   "repository": {
@@ -19,18 +19,19 @@
   "author": "kennywangjin",
   "license": "MIT",
   "dependencies": {
-    "@dotnet/jsinterop": "^0.1.1",
+    "@dotnet/jsinterop": "^3.0.0-preview6.19304.6",
     "@types/bootstrap": "^4.3.0",
     "@types/jquery": "^3.3.29",
     "highcharts": "^7.1.2",
     "node-sass": "^4.12.0",
-    "rollup": "^1.14.2",
+    "rollup": "^1.15.1",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.1",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-uglify": "^6.0.2",
-    "tslib": "^1.9.3",
+    "tslib": "^1.10.0",
     "typescript": "^3.5.1"
   }
+, "-vs-binding":{"ProjectOpened":["start"]}
 }

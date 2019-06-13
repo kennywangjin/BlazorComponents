@@ -10,10 +10,10 @@
            aria-label="search" 
            aria-describedby="search" 
            value="@Text" 
-           onchange="@(e=>OnSearch.InvokeAsync((string)e.Value))" />
+           @onchange="@(e=>OnSearch.InvokeAsync((string)e.Value))" />
 </div>
 
-@functions {
+@code {
     [Parameter] string Text { get; set; }
     [Parameter] EventCallback<string> OnSearch { get; set; }
     [Parameter] string CssClass { get; set; } = string.Empty;

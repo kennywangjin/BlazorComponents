@@ -1,0 +1,44 @@
+﻿@implements IDisposable
+
+<div class="toast-container">
+    @foreach (var item in Model.MessageList)
+    {
+        Guid id = item.Key;
+        ToastMessage message = item.Value;
+        <Toast IsVisible="@(!Model.ClosingList.Contains(id))"
+               OnClose="@(() => Model.RemoveMessage(id))"
+               OnClosed="@(()=> Model.OnRemoved(id))">
+            <ToastHeader>
+                <i class="@($"fas fa-lg {GetHeaderIcon(message)}")" aria-hidden="true"></i>
+                <strong class="ml-2 mr-auto">@message.Header</strong>
+            </ToastHeader>
+            <ToastBody>
+                @message.Body
+            </ToastBody>
+        </Toast>
+    }
+</div>
+
+@code {
+    [Parameter] ToastListModel Model { get; set; }
+
+    protected override void OnInit() => Model.StateChanged += OnStateHasChanged;
+
+    string GetHeaderIcon(ToastMessage message)
+    {
+        switch (message.MessageType)
+        {
+            case ToastMessageType.Warning:
+                return "fa-exclamation-circle text-warning";
+            case ToastMessageType.Danger:
+                return "fa-exclamation-circle text-danger";
+            case ToastMessageType.Information:
+            default:
+                return "fa-info-circle text-success";
+        }
+    }
+
+    private void OnStateHasChanged(object o, EventArgs e) => Invoke(StateHasChanged);
+
+    public void Dispose() => Model.StateChanged -= OnStateHasChanged;
+}

@@ -3,9 +3,9 @@
 @inject IComponentContext ComponentContext
 @implements IDisposable
 
-<div ref="@container" style="width:@Width;height:@Height"></div>
+<div @ref="container" style="width:@Width;height:@Height"></div>
 
-@functions {
+@code {
     [Parameter] bool IsLoading { get; set; }
     [Parameter] ChartOption Option { get; set; }
     [Parameter] string Width { get; set; } = "100%";

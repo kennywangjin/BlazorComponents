@@ -4,8 +4,8 @@
 
 @if (IsVisible)
 {
-    <div ref="@_element" class="modal fade" tabindex="-1" role="dialog">
-        <div class="@DialogClass" role="document">
+    <div @ref="element" class="modal fade" tabindex="-1" role="dialog">
+        <div class="@GetDialogClass()" role="document">
             <div class="modal-content">
                 @ChildContent
             </div>
@@ -13,68 +13,63 @@
     </div>
 }
 
-@functions {
+@code {
     [Parameter] bool IsVisible { get; set; } = true;
     [Parameter] ModalSize Size { get; set; } = ModalSize.Default;
     [Parameter] RenderFragment ChildContent { get; set; }
     [Parameter] EventCallback OnClose { get; set; }
     [Parameter] EventCallback OnClosed { get; set; }
 
-    string DialogClass
-    {
-        get
-        {
-            string klass = "modal-dialog";
-            switch (Size)
-            {
-                case ModalSize.Small:
-                    klass += " modal-sm";
-                    break;
-                case ModalSize.Large:
-                    klass += " modal-lg";
-                    break;
-                case ModalSize.ExtraLarge:
-                    klass += " modal-xl";
-                    break;
-                case ModalSize.Default:
-                default:
-                    break;
-            }
-            return klass;
-        }
-    }
-
-    ElementRef _element;
-    bool _isShown = false;
+    ElementRef element;
+    bool isOpen = false;
 
     protected override async Task OnAfterRenderAsync()
     {
-        if (ComponentContext.IsConnected && IsVisible && !_isShown)
+        if (ComponentContext.IsConnected && IsVisible && !isOpen)
         {
-            await JSRuntime.InvokeAsync<object>("__app.modal.show", _element);
-            _isShown = true;
+            await JSRuntime.InvokeAsync<bool>("__components.modal.open", element);
+            isOpen = true;
         }
     }
 
     public override async Task SetParametersAsync(ParameterCollection parameters)
     {
-        if (ComponentContext.IsConnected && _isShown &&
+        if (ComponentContext.IsConnected && isOpen &&
             parameters.TryGetValue(nameof(IsVisible), out bool result) && !result)
         {
-            await JSRuntime.InvokeAsync<object>("__app.modal.close", _element, new DotNetObjectRef(this));
-            _isShown = false;
+            await JSRuntime.InvokeAsync<bool>("__components.modal.close", element);
+            isOpen = false;
+            await OnClosed.InvokeAsync(null);
         }
         await base.SetParametersAsync(parameters);
     }
 
-    [JSInvokable]
-    public Task OnModalClosed() => OnClosed.InvokeAsync(null);
+    string GetDialogClass()
+    {
+        string klass = "modal-dialog";
+        switch (Size)
+        {
+            case ModalSize.Small:
+                klass += " modal-sm";
+                break;
+            case ModalSize.Large:
+                klass += " modal-lg";
+                break;
+            case ModalSize.ExtraLarge:
+                klass += " modal-xl";
+                break;
+            case ModalSize.Default:
+            default:
+                break;
+        }
+        return klass;
+    }
 
     public void Dispose()
     {
         if (ComponentContext.IsConnected)
         {
-            _ = JSRuntime.InvokeAsync<object>("__app.modal.dispose", _element);
+            _ = JSRuntime.InvokeAsync<bool>("__components.modal.dispose", element);
         }
     }
 }

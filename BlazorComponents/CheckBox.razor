@@ -4,11 +4,11 @@
            id="@Id" 
            disabled="@IsReadonly"
            checked="@IsChecked" 
-           onclick="@OnToggle" />
+           @onclick="@OnToggle" />
     <label class="custom-control-label" for="@Id">@Label</label>
 </div>
 
-@functions {
+@code {
     [Parameter] string CssClass { get; set; } = string.Empty;
     [Parameter] string Label { get; set; }
     [Parameter] string Id { get; set; }

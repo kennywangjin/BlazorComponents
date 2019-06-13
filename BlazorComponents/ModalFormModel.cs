@@ -8,11 +8,9 @@ namespace BlazorComponents
         private bool _isSubmitted = false;
         private string _message = string.Empty;
 
-        public event Func<(bool IsSubmitted, string Message), Task> Closed;
+        public event EventHandler<ModalFormClosedEventArgs> Closed;
 
-        public bool IsVisible { get; private set; } = false;
-        public void Close() => IsVisible = false;
-        public void Open() => IsVisible = true;
+        public bool IsVisible { get; set; } = true;
 
         public async Task OnValidSubmit()
         {
@@ -20,7 +18,7 @@ namespace BlazorComponents
             {
                 _message = await ValidSubmitCore();
                 _isSubmitted = true;
-                Close();
+                IsVisible = false;
             }
             catch (Exception ex)
             {
@@ -28,11 +26,8 @@ namespace BlazorComponents
             }
         }
 
-        public abstract Task<string> ValidSubmitCore();
+        public void OnClosed() => Closed?.Invoke(this, new ModalFormClosedEventArgs(_isSubmitted, _message));
 
-        public Task OnClosed()
-        {
-            return Closed?.Invoke((_isSubmitted, _message));
-        }
+        public abstract Task<string> ValidSubmitCore();
     }
 }

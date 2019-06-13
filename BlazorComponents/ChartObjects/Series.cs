@@ -8,6 +8,8 @@ namespace BlazorComponents.ChartObjects
         public string Type { get; }
         public string Name { get; set; } = "Series";
         public int YAxis { get; set; } = 0;
+        public string? Stack { get; set; }
+        public string? Stacking { get; set; }
         public IEnumerable<double[]>? Data { get; set; }
 
         public Series(string type)

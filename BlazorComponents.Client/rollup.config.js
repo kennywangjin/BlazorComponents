@@ -7,9 +7,9 @@ import { uglify } from 'rollup-plugin-uglify';
 const isDev = process.env.build === 'development';
 
 export default {
-    input: "src/site.ts",
+    input: "src/components.ts",
     output: {
-        dir: "../Content",
+        dir: "../BlazorComponents/wwwroot",
         format: "iife",
         globals: { highcharts: "Highcharts", jquery: "$" }
     },

@@ -1,11 +1,11 @@
-﻿<Modal IsVisible="@Model.IsVisible"
-       Size="@Size"
-       OnClose="@Model.Close"
-       OnClosed="@Model.OnClosed">
-    <EditForm Model="@Model" OnValidSubmit="@Model.OnValidSubmit">
+﻿<Modal IsVisible="Model.IsVisible"
+       Size="Size"
+       OnClose="(_=>Model.IsVisible=false)"
+       OnClosed="Model.OnClosed">
+    <EditForm Model="Model" OnValidSubmit="Model.OnValidSubmit">
         <DataAnnotationsValidator />
-        <ModalHeader>
-            <i class="@($"fas fa-{TitleIcon}")" aria-hidden="true"></i>
+        <ModalHeader OnClose="@(()=>Model.IsVisible=false)">
+            <i class="@($" fas fa-{TitleIcon}")" aria-hidden="true"></i>
             <span class="ml-1">@TitleText</span>
         </ModalHeader>
         <ModalBody>
@@ -13,10 +13,12 @@
         </ModalBody>
         <ModalFooter>
             <button type="submit" class="btn btn-primary">
-                <i class="@($"fas fa-{SubmitIcon}")" aria-hidden="true"></i>
+                <i class="@($" fas fa-{SubmitIcon}")" aria-hidden="true"></i>
                 <span class="ml-1">@SubmitText</span>
             </button>
-            <button type="button" class="btn btn-secondary" onclick="@Model.Close">
+            <button type="button"
+                    class="btn btn-secondary"
+                    @onclick="@(_=>Model.IsVisible=false)">
                 <i class="fas fa-times" aria-hidden="true"></i>
                 <span class="ml-1">Close</span>
             </button>
@@ -24,7 +26,7 @@
     </EditForm>
 </Modal>
 
-@functions {
+@code {
     [Parameter] ModalFormModel Model { get; set; }
     [Parameter] string TitleText { get; set; } = "Form Title";
     [Parameter] string TitleIcon { get; set; } = "plus";

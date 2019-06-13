@@ -1,0 +1,19 @@
+@for (int index = StartIndex; index <= EndIndex; index++)
+{
+    int page = index;
+    <PageItem @key="page"
+              Page="page"
+              PageIndex="PageIndex"
+              PageCount="PageCount"
+              OnPaginate="OnPaginate">
+        @(page + 1)
+    </PageItem>
+}
+
+@code {
+    [Parameter] int StartIndex { get; set; }
+    [Parameter] int EndIndex { get; set; }
+    [Parameter] EventCallback<int> OnPaginate { get; set; }
+    [Parameter] int PageCount { get; set; }
+    [Parameter] int PageIndex { get; set; }
+}

@@ -2,19 +2,18 @@
     <h5 class="modal-title">
         @ChildContent
     </h5>
-    @if (ShowClose)
+    @if (OnClose.HasDelegate)
     {
         <button type="button"
                 class="close"
                 aria-label="Close"
-                onclick="@OnClose">
+                @onclick="@OnClose">
             <span aria-hidden="true">&times;</span>
         </button>
     }
 </div>
 
-@functions {
+@code {
     [Parameter] RenderFragment ChildContent { get; set; }
     [Parameter] EventCallback OnClose { get; set; }
-    [Parameter] bool ShowClose { get; set; } = true;
 }
