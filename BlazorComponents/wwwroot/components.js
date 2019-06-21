@@ -57,7 +57,6 @@
             chart.destroy();
     }
     var Chart = { render: render, destroy: destroy };
-    //# sourceMappingURL=chart.js.map
 
     var $ModalCache = new Map();
     function open(element) {
@@ -111,7 +110,6 @@
         return true;
     }
     var Modal = { open: open, close: close, dispose: dispose };
-    //# sourceMappingURL=modal.js.map
 
     var $ToastCache = new Map();
     function open$1(element) {
@@ -163,7 +161,6 @@
         return true;
     }
     var Toast = { open: open$1, close: close$1, dispose: dispose$1 };
-    //# sourceMappingURL=toast.js.map
 
     (function (global) {
         global.__components = {
@@ -172,6 +169,5 @@
             toast: Toast
         };
     })(window);
-    //# sourceMappingURL=components.js.map
 
 }(Highcharts));

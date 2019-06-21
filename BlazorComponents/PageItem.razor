@@ -1,7 +1,7 @@
-<li class="@CssClass">
-    <span class="page-link" @onclick="@(()=>OnPaginate.InvokeAsync(Page))">
+<li class="@CssClass" @key="Page">
+    <a class="page-link" href="javascript:void(0)" @onclick="@(()=>OnPaginate.InvokeAsync(Page))">
         @ChildContent
-    </span>
+    </a>
 </li>
 
 @code {

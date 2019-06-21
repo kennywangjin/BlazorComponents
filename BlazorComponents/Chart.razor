@@ -17,7 +17,7 @@
     {
         if (ComponentContext.IsConnected)
         {
-            return JSRuntime.InvokeAsync<object>("__app.chart.render", container, Option, IsLoading);
+            return JSRuntime.InvokeAsync<object>("__components.chart.render", container, Option, IsLoading);
         }
         return Task.CompletedTask;
     }
@@ -26,7 +26,7 @@
     {
         if (ComponentContext.IsConnected)
         {
-            JSRuntime.InvokeAsync<string>("__app.chart.destroy", container);
+            JSRuntime.InvokeAsync<string>("__components.chart.destroy", container);
         }
     }
 }

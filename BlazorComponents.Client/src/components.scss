@@ -34,7 +34,7 @@
 }
 
 .toast-container {
-    position: absolute;
+    position: fixed;
     top: 1rem;
     right: 1rem;
 }
@@ -108,20 +108,8 @@ textarea.form-control {
 }
 
 .page-item {
-    .page-label {
-        position: relative;
-        display: block;
-        padding: .5rem .75rem;
-        margin-left: -1px;
-        line-height: 1.25;
+    .page-link.page-label {
         color: #007bff;
         background-color: #fff;
-        border: 1px solid #dee2e6;
-    }
-
-    &:not(.disabled):not(.active) {
-        .page-link {
-            cursor: pointer;
-        }
     }
 }

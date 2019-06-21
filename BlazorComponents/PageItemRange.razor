@@ -1,8 +1,7 @@
 @for (int index = StartIndex; index <= EndIndex; index++)
 {
     int page = index;
-    <PageItem @key="page"
-              Page="page"
+    <PageItem Page="page"
               PageIndex="PageIndex"
               PageCount="PageCount"
               OnPaginate="OnPaginate">
