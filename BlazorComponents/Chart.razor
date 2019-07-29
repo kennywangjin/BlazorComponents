@@ -1,32 +1,66 @@
-﻿@using BlazorComponents.ChartObjects
 @inject IJSRuntime JSRuntime
 @inject IComponentContext ComponentContext
 @implements IDisposable
 
-<div @ref="container" style="width:@Width;height:@Height"></div>
+<div @ref="_element" @attributes="Attributes"></div>
 
 @code {
+    [Parameter] string RenderScript { get; set; } = "__components.chart.render";
     [Parameter] bool IsLoading { get; set; }
-    [Parameter] ChartOption Option { get; set; }
-    [Parameter] string Width { get; set; } = "100%";
-    [Parameter] string Height { get; set; } = "600px";
+    [Parameter] object Options { get; set; } = new { };
+    [Parameter(CaptureUnmatchedValues = true)] Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
-    ElementRef container;
+    ElementRef _element;
+    object? _oldOptions;
+    bool? _oldIsLoading;
 
-    protected override Task OnAfterRenderAsync()
+    public Task RenderAsync(object options)
     {
         if (ComponentContext.IsConnected)
         {
-            return JSRuntime.InvokeAsync<object>("__components.chart.render", container, Option, IsLoading);
+            return JSRuntime.InvokeAsync<object>(RenderScript, _element, options);
         }
-        return Task.CompletedTask;
+        else
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    public override async Task SetParametersAsync(ParameterCollection parameters)
+    {
+        _oldOptions = Options;
+        _oldIsLoading = IsLoading;
+
+        await base.SetParametersAsync(parameters);
+
+        if (ComponentContext.IsConnected && _oldIsLoading != IsLoading)
+        {
+            _ = JSRuntime.InvokeAsync<object>("__components.chart.showLoading", _element, IsLoading);
+        }
+    }
+
+    protected override bool ShouldRender()
+    {
+        return _oldOptions != Options;
+    }
+
+    protected override Task OnAfterRenderAsync()
+    {
+        if (ComponentContext.IsConnected && ShouldRender())
+        {
+            return JSRuntime.InvokeAsync<object>("__components.chart.render", _element, Options);
+        }
+        else
+        {
+            return Task.CompletedTask;
+        }
     }
 
     public void Dispose()
     {
         if (ComponentContext.IsConnected)
         {
-            JSRuntime.InvokeAsync<string>("__components.chart.destroy", container);
+            _ = JSRuntime.InvokeAsync<object>("__components.chart.destroy", _element);
         }
     }
 }

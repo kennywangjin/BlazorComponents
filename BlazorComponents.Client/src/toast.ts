@@ -56,4 +56,4 @@ function dispose(element: HTMLElement | null): boolean {
     return true;
 }
 
-export const Toast = { open, close, dispose };
+export const TOAST = { open, close, dispose };

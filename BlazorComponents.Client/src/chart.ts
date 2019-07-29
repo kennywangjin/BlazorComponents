@@ -1,35 +1,45 @@
 ﻿import Highcharts from "highcharts";
 
-const ChartCache = new Map<HTMLElement, Highcharts.Chart>();
-
 Highcharts.setOptions({
-    credits: { enabled: false },
-    lang: { loading: "" }
+    lang: { loading: '' },
+    credits: { enabled: false }
 });
 
-function render(
-    container: HTMLElement,
-    options: Highcharts.Options,
-    loading: boolean
-) {
-    options = { ...options, tooltip: { xDateFormat: "%A, %b %e, %H:%M" } };
-    let chart = ChartCache.get(container);
+const CHART_OBJECTS = new Map<HTMLElement, Highcharts.Chart>();
+
+/**
+ * render or update chart hosted in specified html element
+ * @param element container element the chart is hosted in
+ * @param options chart options
+ */
+export function render(element: HTMLElement, options: Highcharts.Options) {
+    let chart = CHART_OBJECTS.get(element);
+
     if (!chart) {
-        chart = Highcharts.chart(container, options);
-        ChartCache.set(container, chart);
+        chart = Highcharts.chart(element, options);
+        CHART_OBJECTS.set(element, chart);
     } else {
         chart.update(options);
     }
-    if (loading) {
-        chart.showLoading();
-    } else {
-        chart.hideLoading();
-    }
 }
 
-function destroy(container: HTMLElement) {
-    const chart = ChartCache.get(container);
-    if (chart) chart.destroy();
+/**
+ * show or hide loading symbol
+ * @param element element where chart is hosted in
+ * @param isLoading * whether show or hide loading symbol
+ */
+export function showLoading(element: HTMLElement, isLoading: boolean) {
+    const chart = CHART_OBJECTS.get(element);
+    chart && (isLoading ? chart.showLoading() : chart.hideLoading());
 }
 
-export const Chart = { render, destroy };
+/**
+ * completely destroy chart object hosted in the specified element
+ * @param element container element the chart may be hosted in
+ */
+export function destroy(element: HTMLElement) {
+    const chart = CHART_OBJECTS.get(element);
+    chart && chart.destroy();
+}
+
+export const CHART = { showLoading, render, destroy };

@@ -1,12 +1,11 @@
-import { Chart } from "./chart";
-import { Modal } from "./modal";
-import { Toast } from "./toast";
+import { MODAL } from "./modal";
+import { TOAST } from "./toast";
 import "./components.scss";
+import { CHART } from "./chart";
 
-(function(global: any) {
-    global.__components = {
-        chart: Chart,
-        modal: Modal,
-        toast: Toast
-    };
-})(window);
+//@ts-ignore
+window.__components = {
+    modal: MODAL,
+    toast: TOAST,
+    chart: CHART
+};

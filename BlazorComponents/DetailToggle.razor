@@ -1,0 +1,9 @@
+﻿<button class="btn btn-link btn-sm p-0" @onclick="OnToggleDetail" @attributes="AdditionalAttributes">
+    <i class="@($"far fa-lg {(IsDetailVisible?"fa-minus-square":"fa-plus-square")}")" aria-hidden="true"></i>
+</button>
+
+@code {
+    [Parameter] bool IsDetailVisible { get; set; } = false;
+    [Parameter] EventCallback OnToggleDetail { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] Dictionary<string, object> AdditionalAttributes { get; set; } = default!;
+}

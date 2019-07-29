@@ -58,4 +58,4 @@ function dispose(element: HTMLElement | null): boolean {
     return true;
 }
 
-export const Modal = { open, close, dispose };
+export const MODAL = { open, close, dispose };

@@ -3,61 +3,6 @@
 
     Highcharts = Highcharts && Highcharts.hasOwnProperty('default') ? Highcharts['default'] : Highcharts;
 
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
-
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
-
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
-    ***************************************************************************** */
-
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
-
-    var ChartCache = new Map();
-    Highcharts.setOptions({
-        credits: { enabled: false },
-        lang: { loading: "" }
-    });
-    function render(container, options, loading) {
-        options = __assign({}, options, { tooltip: { xDateFormat: "%A, %b %e, %H:%M" } });
-        var chart = ChartCache.get(container);
-        if (!chart) {
-            chart = Highcharts.chart(container, options);
-            ChartCache.set(container, chart);
-        }
-        else {
-            chart.update(options);
-        }
-        if (loading) {
-            chart.showLoading();
-        }
-        else {
-            chart.hideLoading();
-        }
-    }
-    function destroy(container) {
-        var chart = ChartCache.get(container);
-        if (chart)
-            chart.destroy();
-    }
-    var Chart = { render: render, destroy: destroy };
-
     var $ModalCache = new Map();
     function open(element) {
         if (!element) {
@@ -109,7 +54,8 @@
         $ModalCache.delete(element);
         return true;
     }
-    var Modal = { open: open, close: close, dispose: dispose };
+    var MODAL = { open: open, close: close, dispose: dispose };
+    //# sourceMappingURL=modal.js.map
 
     var $ToastCache = new Map();
     function open$1(element) {
@@ -160,14 +106,56 @@
         $ToastCache.delete(element);
         return true;
     }
-    var Toast = { open: open$1, close: close$1, dispose: dispose$1 };
+    var TOAST = { open: open$1, close: close$1, dispose: dispose$1 };
+    //# sourceMappingURL=toast.js.map
 
-    (function (global) {
-        global.__components = {
-            chart: Chart,
-            modal: Modal,
-            toast: Toast
-        };
-    })(window);
+    Highcharts.setOptions({
+        lang: { loading: '' },
+        credits: { enabled: false }
+    });
+    var CHART_OBJECTS = new Map();
+    /**
+     * render or update chart hosted in specified html element
+     * @param element container element the chart is hosted in
+     * @param options chart options
+     * @param isLoading whether to show loading symbol (chart won't re-render if loading symbol is shown)
+     */
+    function render(element, options) {
+        var chart = CHART_OBJECTS.get(element);
+        if (!chart) {
+            chart = Highcharts.chart(element, options);
+            CHART_OBJECTS.set(element, chart);
+        }
+        else {
+            chart.update(options);
+        }
+    }
+    /**
+     * show or hide loading symbol
+     * @param element element where chart is hosted in
+     * @param isLoading * whether show or hide loading symbol
+     */
+    function showLoading(element, isLoading) {
+        var chart = CHART_OBJECTS.get(element);
+        chart && (isLoading ? chart.showLoading() : chart.hideLoading());
+    }
+    /**
+     * completely destroy chart object hosted in the specified element
+     * @param element container element the chart may be hosted in
+     */
+    function destroy(element) {
+        var chart = CHART_OBJECTS.get(element);
+        chart && chart.destroy();
+    }
+    var CHART = { showLoading: showLoading, render: render, destroy: destroy };
+    //# sourceMappingURL=chart.js.map
+
+    //@ts-ignore
+    window.__components = {
+        modal: MODAL,
+        toast: TOAST,
+        chart: CHART
+    };
+    //# sourceMappingURL=components.js.map
 
 }(Highcharts));
