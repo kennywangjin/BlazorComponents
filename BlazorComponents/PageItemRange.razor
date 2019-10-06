@@ -10,9 +10,9 @@
 }
 
 @code {
-    [Parameter] int StartIndex { get; set; }
-    [Parameter] int EndIndex { get; set; }
-    [Parameter] EventCallback<int> OnPaginate { get; set; }
-    [Parameter] int PageCount { get; set; }
-    [Parameter] int PageIndex { get; set; }
+    [Parameter] public int StartIndex { get; set; }
+    [Parameter] public int EndIndex { get; set; }
+    [Parameter] public EventCallback<int> OnPaginate { get; set; }
+    [Parameter] public int PageCount { get; set; }
+    [Parameter] public int PageIndex { get; set; }
 }

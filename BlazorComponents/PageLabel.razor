@@ -1,7 +1,9 @@
 <li class="page-item">
-    <span class="page-link page-label">@ChildContent</span>
+    <span class="page-link page-label">
+        @ChildContent
+    </span>
 </li>
 
 @code {
-    [Parameter] RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; } = default!;
 }

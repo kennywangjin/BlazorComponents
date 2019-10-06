@@ -1,36 +1,36 @@
 {
-  "name": "blazorcomponents.client",
-  "version": "1.0.0",
-  "description": "client scripts and styles for blazor components",
-  "repository": {
-    "type": "git",
-    "url": "https://dev.azure.com/kennywangjin/BlazorComponents"
-  },
-  "main": "site.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:dev": "rollup -c --environment build:development",
-    "build:prod": "npm install && rollup -c --environment build:production",
-    "start": "rollup -c -w --environment build:development"
-  },
-  "keywords": [
-    "client"
-  ],
-  "author": "kennywangjin",
-  "license": "MIT",
-  "dependencies": {
-    "@dotnet/jsinterop": "^3.0.0-preview7.19362.4",
-    "@types/bootstrap": "^4.3.1",
-    "@types/jquery": "^3.3.30",
-    "highcharts": "^7.1.2",
-    "node-sass": "^4.12.0",
-    "rollup": "^1.17.0",
-    "rollup-plugin-commonjs": "^10.0.1",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-postcss": "^2.0.3",
-    "rollup-plugin-typescript": "^1.0.1",
-    "rollup-plugin-uglify": "^6.0.2",
-    "tslib": "^1.10.0",
-    "typescript": "^3.5.2"
-  }
+    "name": "blazorcomponents.client",
+    "version": "1.0.0",
+    "description": "client scripts and styles for blazor components",
+    "repository": {
+        "type": "git",
+        "url": "https://dev.azure.com/kennywangjin/BlazorComponents"
+    },
+    "main": "site.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build:dev": "rollup -c --environment build:development",
+        "build:prod": "npm install && rollup -c --environment build:production",
+        "start": "rollup -c -w --environment build:development"
+    },
+    "keywords": [
+        "client"
+    ],
+    "author": "kennywangjin",
+    "license": "MIT",
+    "dependencies": {
+        "@dotnet/jsinterop": "^3.0.0",
+        "@types/bootstrap": "^4.3.1",
+        "@types/jquery": "^3.3.31",
+        "highcharts": "^7.2.0",
+        "node-sass": "^4.12.0",
+        "rollup": "^1.23.1",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-postcss": "^2.0.3",
+        "rollup-plugin-typescript": "^1.0.1",
+        "rollup-plugin-uglify": "^6.0.3",
+        "tslib": "^1.10.0",
+        "typescript": "^3.6.3"
+    }
 }
