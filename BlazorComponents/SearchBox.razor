@@ -1,4 +1,4 @@
-﻿<div class=@($"input-group search-box {CssClass}")>
+﻿<div @attributes="AdditionalAttributes" class="@CssClass">
     <div class="input-group-prepend">
         <span class="input-group-text" id="search">
             <i class="fas fa-search"></i>
@@ -14,9 +14,25 @@
 </div>
 
 @code {
-    [Parameter] public string Text { get; set; } = string.Empty;
-    [Parameter] public EventCallback<string> OnSearch { get; set; }
-    [Parameter] public string CssClass { get; set; } = string.Empty;
-    [Parameter(CaptureUnmatchedValue = true)]
-    public IDictionary<string, object> AdditionalAttributes = new Dictionary<string, object>();
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object> AdditionalAttributes { get; set; } = new Dictionary<string, object>();
+
+    string CssClass
+    {
+        get
+        {
+            string css = "input-group search-box";
+            if (AdditionalAttributes.TryGetValue("class", out var klass))
+            {
+                css += " " + klass.ToString();
+            }
+            return css;
+        }
+    }
 }
