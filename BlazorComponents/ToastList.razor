@@ -22,7 +22,7 @@
 @code {
     [Parameter] ToastListModel Model { get; set; }
 
-    protected override void OnInit() => Model.StateChanged += OnStateHasChanged;
+    protected override void OnInitialized() => Model.StateChanged += OnStateHasChanged;
 
     string GetHeaderIcon(ToastMessage message)
     {

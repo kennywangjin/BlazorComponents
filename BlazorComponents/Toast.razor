@@ -25,16 +25,16 @@
 }
 
 @code {
-    [Parameter] bool IsVisible { get; set; } = true;
-    [Parameter] RenderFragment ToastHeader { get; set; }
-    [Parameter] RenderFragment ToastBody { get; set; }
-    [Parameter] EventCallback OnClose { get; set; }
-    [Parameter] EventCallback OnClosed { get; set; }
+    [Parameter]    public bool IsVisible { get; set; } = true;
+    [Parameter]public RenderFragment ToastHeader { get; set; }
+    [Parameter]public RenderFragment ToastBody { get; set; }
+    [Parameter]public EventCallback OnClose { get; set; }
+    [Parameter]public EventCallback OnClosed { get; set; }
 
-    ElementRef element;
+    ElementReference element;
     bool isOpen = false;
 
-    protected override async Task OnAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (Context.IsConnected && IsVisible && !isOpen)
         {
@@ -43,7 +43,7 @@
         }
     }
 
-    public override async Task SetParametersAsync(ParameterCollection parameters)
+    public override async Task SetParametersAsync(ParameterView parameters)
     {
         if (Context.IsConnected && isOpen &&
         parameters.TryGetValue(nameof(IsVisible), out bool result) && !result)

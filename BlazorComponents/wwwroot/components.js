@@ -55,7 +55,6 @@
         return true;
     }
     var MODAL = { open: open, close: close, dispose: dispose };
-    //# sourceMappingURL=modal.js.map
 
     var $ToastCache = new Map();
     function open$1(element) {
@@ -107,7 +106,6 @@
         return true;
     }
     var TOAST = { open: open$1, close: close$1, dispose: dispose$1 };
-    //# sourceMappingURL=toast.js.map
 
     Highcharts.setOptions({
         lang: { loading: '' },
@@ -118,7 +116,6 @@
      * render or update chart hosted in specified html element
      * @param element container element the chart is hosted in
      * @param options chart options
-     * @param isLoading whether to show loading symbol (chart won't re-render if loading symbol is shown)
      */
     function render(element, options) {
         var chart = CHART_OBJECTS.get(element);
@@ -148,7 +145,6 @@
         chart && chart.destroy();
     }
     var CHART = { showLoading: showLoading, render: render, destroy: destroy };
-    //# sourceMappingURL=chart.js.map
 
     //@ts-ignore
     window.__components = {
@@ -156,6 +152,5 @@
         toast: TOAST,
         chart: CHART
     };
-    //# sourceMappingURL=components.js.map
 
 }(Highcharts));

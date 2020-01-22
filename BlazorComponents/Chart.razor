@@ -1,16 +1,15 @@
 @inject IJSRuntime JSRuntime
-@inject IComponentContext ComponentContext
 @implements IDisposable
 
 <div @ref="_element" @attributes="Attributes"></div>
 
 @code {
-    [Parameter] string RenderScript { get; set; } = "__components.chart.render";
-    [Parameter] bool IsLoading { get; set; }
-    [Parameter] object Options { get; set; } = new { };
-    [Parameter(CaptureUnmatchedValues = true)] Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
+    [Parameter]public string RenderScript { get; set; } = "__components.chart.render";
+    [Parameter]public bool IsLoading { get; set; }
+    [Parameter]public object Options { get; set; } = new { };
+    [Parameter(CaptureUnmatchedValues = true)]public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
-    ElementRef _element;
+    ElementReference _element;
     object? _oldOptions;
     bool? _oldIsLoading;
 
@@ -26,7 +25,7 @@
         }
     }
 
-    public override async Task SetParametersAsync(ParameterCollection parameters)
+    public override async Task SetParametersAsync(ParameterView parameters)
     {
         _oldOptions = Options;
         _oldIsLoading = IsLoading;
@@ -44,9 +43,9 @@
         return _oldOptions != Options;
     }
 
-    protected override Task OnAfterRenderAsync()
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
-        if (ComponentContext.IsConnected && ShouldRender())
+        if (!firstRender && ShouldRender())
         {
             return JSRuntime.InvokeAsync<object>("__components.chart.render", _element, Options);
         }

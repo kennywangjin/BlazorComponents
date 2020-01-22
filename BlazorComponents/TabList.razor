@@ -30,14 +30,14 @@
 </CascadingValue>
 
 @code {
-    [Parameter] RenderFragment TabNavs { get; set; }
-    [Parameter] RenderFragment TabPanes { get; set; }
-    [Parameter] string ActiveTabId { get; set; }
-    [Parameter] bool IsCard { get; set; }
+    [Parameter]    public RenderFragment TabNavs { get; set; }
+    [Parameter]    public RenderFragment TabPanes { get; set; }
+    [Parameter]    public string ActiveTabId { get; set; }
+    [Parameter]    public bool IsCard { get; set; }
 
     TabListContext _context;
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
         _context = new TabListContext { ActiveTabId = ActiveTabId };
         _context.StateChanged += StateHasChanged;

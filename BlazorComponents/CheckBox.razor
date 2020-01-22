@@ -9,10 +9,10 @@
 </div>
 
 @code {
-    [Parameter] string CssClass { get; set; } = string.Empty;
-    [Parameter] string Label { get; set; }
-    [Parameter] string Id { get; set; }
-    [Parameter] bool IsReadonly { get; set; } = false;
-    [Parameter] bool IsChecked { get; set; }
-    [Parameter] EventCallback OnToggle { get; set; }
+    [Parameter]public string CssClass { get; set; } = string.Empty;
+    [Parameter]public string Label { get; set; }
+    [Parameter]public string Id { get; set; }
+    [Parameter]public bool IsReadonly { get; set; } = false;
+    [Parameter]public bool IsChecked { get; set; }
+    [Parameter]public EventCallback OnToggle { get; set; }
 }

@@ -8,6 +8,6 @@
 </div>
 
 @code {
-    [Parameter] RenderFragment Header { get; set; }
-    [Parameter] RenderFragment Body { get; set; }
+    [Parameter]    public RenderFragment Header { get; set; }=default!;
+    [Parameter]    public RenderFragment Body { get; set; }=default!;
 }

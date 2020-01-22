@@ -3,7 +3,7 @@
 </button>
 
 @code {
-    [Parameter] bool IsDetailVisible { get; set; } = false;
-    [Parameter] EventCallback OnToggleDetail { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)] Dictionary<string, object> AdditionalAttributes { get; set; } = default!;
+    [Parameter]    public bool IsDetailVisible { get; set; } = false;
+    [Parameter]    public EventCallback OnToggleDetail { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]    public Dictionary<string, object> AdditionalAttributes { get; set; } = default!;
 }
