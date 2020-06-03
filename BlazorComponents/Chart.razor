@@ -4,24 +4,21 @@
 <div @ref="_element" @attributes="Attributes"></div>
 
 @code {
-    [Parameter]public string RenderScript { get; set; } = "__components.chart.render";
-    [Parameter]public bool IsLoading { get; set; }
-    [Parameter]public object Options { get; set; } = new { };
-    [Parameter(CaptureUnmatchedValues = true)]public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
+    [Parameter] public string RenderScript { get; set; } = "__components.chart.render";
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public object Options { get; set; } = new { };
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
-    ElementReference _element;
-    object? _oldOptions;
-    bool? _oldIsLoading;
+    private ElementReference _element;
+    private object? _oldOptions;
+    private bool? _oldIsLoading;
+    private bool _isRendered = false;
 
-    public Task RenderAsync(object options)
+    public async ValueTask RenderAsync(object options)
     {
-        if (ComponentContext.IsConnected)
+        if (_isRendered)
         {
-            return JSRuntime.InvokeAsync<object>(RenderScript, _element, options);
-        }
-        else
-        {
-            return Task.CompletedTask;
+            await JSRuntime.InvokeVoidAsync(RenderScript, _element, options);
         }
     }
 
@@ -32,7 +29,7 @@
 
         await base.SetParametersAsync(parameters);
 
-        if (ComponentContext.IsConnected && _oldIsLoading != IsLoading)
+        if (_isRendered && _oldIsLoading != IsLoading)
         {
             _ = JSRuntime.InvokeAsync<object>("__components.chart.showLoading", _element, IsLoading);
         }
@@ -43,23 +40,20 @@
         return _oldOptions != Options;
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender && ShouldRender())
+        _isRendered = true;
+        if (ShouldRender())
         {
-            return JSRuntime.InvokeAsync<object>("__components.chart.render", _element, Options);
-        }
-        else
-        {
-            return Task.CompletedTask;
+            await JSRuntime.InvokeVoidAsync("__components.chart.render", _element, Options);
         }
     }
 
     public void Dispose()
     {
-        if (ComponentContext.IsConnected)
+        if (_isRendered)
         {
-            _ = JSRuntime.InvokeAsync<object>("__components.chart.destroy", _element);
+            _ = JSRuntime.InvokeVoidAsync("__components.chart.destroy", _element);
         }
     }
 }

@@ -1,20 +1,12 @@
 ﻿@inject IJSRuntime JSRuntime
-@inject IComponentContext Context
 @implements IDisposable
 
 @if (IsVisible)
 {
-    <div @ref="element"
-         role="alert"
-         aria-live="assertive"
-         aria-atomic="true"
-         class="toast">
+    <div @ref="_element" role="alert" aria-live="assertive" aria-atomic="true" class="toast">
         <div class="toast-header">
             @ToastHeader
-            <button type="button"
-                    class="ml-2 mb-1 close"
-                    aria-label="Close"
-                    @onclick="@OnClose">
+            <button type="button" class="ml-2 mb-1 close" aria-label="Close" @onclick="@OnClose">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -25,30 +17,32 @@
 }
 
 @code {
-    [Parameter]    public bool IsVisible { get; set; } = true;
-    [Parameter]public RenderFragment ToastHeader { get; set; }
-    [Parameter]public RenderFragment ToastBody { get; set; }
-    [Parameter]public EventCallback OnClose { get; set; }
-    [Parameter]public EventCallback OnClosed { get; set; }
+    [Parameter] public bool IsVisible { get; set; } = true;
+    [Parameter] public RenderFragment ToastHeader { get; set; } = default!;
+    [Parameter] public RenderFragment ToastBody { get; set; } = default!;
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback OnClosed { get; set; }
 
-    ElementReference element;
-    bool isOpen = false;
+    private ElementReference _element;
+    private bool isOpen = false;
+    private bool _rendered = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (Context.IsConnected && IsVisible && !isOpen)
+        _rendered = true;
+        if (!firstRender && IsVisible && !isOpen)
         {
-            await JSRuntime.InvokeAsync<bool>("__components.toast.open", element);
+            await JSRuntime.InvokeVoidAsync("__components.toast.open", _element);
             isOpen = true;
         }
     }
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
-        if (Context.IsConnected && isOpen &&
+        if (_rendered && isOpen &&
         parameters.TryGetValue(nameof(IsVisible), out bool result) && !result)
         {
-            await JSRuntime.InvokeAsync<bool>("__components.toast.close", element);
+            await JSRuntime.InvokeAsync<bool>("__components.toast.close", _element);
             isOpen = false;
             await OnClosed.InvokeAsync(null);
         }
@@ -57,9 +51,9 @@
 
     public void Dispose()
     {
-        if (Context.IsConnected)
+        if (_rendered)
         {
-            _ = JSRuntime.InvokeAsync<bool>("__components.toast.dispose", element);
+            _ = JSRuntime.InvokeVoidAsync("__components.toast.dispose", _element);
         }
     }
 }

@@ -7,9 +7,9 @@ namespace BlazorComponents
 {
     public class TabListContext
     {
-        public event Action StateChanged;
+        public event Action? StateChanged;
 
-        public string ActiveTabId { get; set; }
+        public string ActiveTabId { get; set; } = string.Empty;
 
         public void OnChangeActiveTab(string tabId)
         {

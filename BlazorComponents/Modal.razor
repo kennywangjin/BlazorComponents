@@ -4,7 +4,7 @@
 @if (IsVisible)
 {
     <div @ref="_element" class="modal fade" tabindex="-1" role="dialog">
-        <div class="@DialogCssClass" role="document">
+        <div class="@GetDialogCssClass()" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
@@ -44,31 +44,44 @@
             await JSRuntime.InvokeVoidAsync("__components.modal.open", _element);
             _isOpen = true;
         }
-    }
-
-    public override async Task SetParametersAsync(ParameterView parameters)
-    {
-        if (_isOpen && parameters.TryGetValue(nameof(IsVisible), out bool result) && !result)
+        else if (!IsVisible && _isOpen)
         {
             await JSRuntime.InvokeVoidAsync("__components.modal.close", _element);
             _isOpen = false;
             await OnClosed.InvokeAsync(null);
         }
-        await base.SetParametersAsync(parameters);
     }
 
-    string DialogCssClass
-        => Size switch
-        {
-            ModalSize.Small => "modal-dialog modal-sm",
-            ModalSize.Large => "modal-dialog modal-lg",
-            ModalSize.ExtraLarge => "modal-dialog modal-xl",
-            ModalSize.Default => "modal-dialog",
-            _ => "modal-dialog",
-        };
-
-    public async void Dispose()
+    protected override bool ShouldRender()
     {
-        await JSRuntime.InvokeVoidAsync("__components.modal.dispose", _element);
+        if (!IsVisible && _isOpen)
+        {
+            return false;
+        }
+        else
+        {
+            return base.ShouldRender();
+        }
+    }
+
+    public void Dispose()
+    {
+        _ = JSRuntime.InvokeVoidAsync("__components.modal.dispose", _element);
+    }
+
+    private string GetDialogCssClass()
+    {
+        switch (Size)
+        {
+            case ModalSize.Small:
+                return "modal-dialog modal-sm";
+            case ModalSize.Large:
+                return "modal-dialog modal-lg";
+            case ModalSize.ExtraLarge:
+                return "modal-dialog modal-xl";
+            case ModalSize.Default:
+            default:
+                return "modal-dialog";
+        }
     }
 }

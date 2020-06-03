@@ -17,18 +17,13 @@ namespace BlazorComponents
     {
         public static string GetCssClass(this ModalSize modalSize)
         {
-            switch (modalSize)
+            return modalSize switch
             {
-                case ModalSize.Small:
-                    return "modal-sm";
-                case ModalSize.Large:
-                    return "modal-lg";
-                case ModalSize.ExtraLarge:
-                    return "modal-xl";
-                case ModalSize.Default:
-                default:
-                    return string.Empty;
-            }
+                ModalSize.Small => "modal-sm",
+                ModalSize.Large => "modal-lg",
+                ModalSize.ExtraLarge => "modal-xl",
+                _ => string.Empty,
+            };
         }
     }
 }

@@ -1,7 +1,5 @@
-<li class="@CssClass" @key="Page">
-    <a class="page-link"
-       href="javascript:void(0)"
-       @onclick="()=>OnPaginate.InvokeAsync(Page)">
+<li class="@GetCssClass()" @key="Page">
+    <a class="page-link" href="javascript:void(0)" @onclick="()=>OnPaginate.InvokeAsync(Page)" @onclick:preventDefault>
         @ChildContent
     </a>
 </li>
@@ -13,14 +11,17 @@
     [Parameter] public int PageCount { get; set; }
     [Parameter] public int PageIndex { get; set; }
 
-    string CssClass
+    private string GetCssClass()
     {
-        get
+        string css = "page-item";
+        if (Page == PageIndex)
         {
-            string css = "page-item";
-            if (Page == PageIndex) { css += " active"; }
-            if (Page < 0 || Page > PageCount - 1) { css += " disabled"; }
-            return css;
+            css += " active";
         }
+        if (Page < 0 || Page > PageCount - 1)
+        {
+            css += " disabled";
+        }
+        return css;
     }
 }

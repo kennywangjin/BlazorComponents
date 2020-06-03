@@ -2,70 +2,36 @@
 {
     <nav aria-label="table navigation">
         <ul class="pagination justify-content-end mb-0">
-            <PageItem Page="PageIndex-1"
-                      PageIndex="PageIndex"
-                      PageCount="PageCount"
-                      OnPaginate="OnPaginate">
+            <PageItem Page="PageIndex-1" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate">
                 <span aria-hidden="true">&laquo;</span>
             </PageItem>
             @if (PageCount <= (SideVisible * 2 + 3))
             {
-                <PageItemRange StartIndex="0"
-                               EndIndex="PageCount-1"
-                               PageIndex="PageIndex"
-                               PageCount="PageCount"
-                               OnPaginate="OnPaginate" />
+                <PageItemRange StartIndex="0" EndIndex="PageCount-1" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate" />
             }
             else if (PageIndex <= (SideVisible + 1))
             {
-                <PageItemRange StartIndex="0"
-                               EndIndex="SideVisible * 2 + 1"
-                               PageIndex="PageIndex"
-                               PageCount="PageCount"
-                               OnPaginate="OnPaginate" />
+                <PageItemRange StartIndex="0" EndIndex="SideVisible * 2 + 1" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate" />
                 <PageLabel>...</PageLabel>
-                <PageItem Page="PageCount-1"
-                          PageIndex="PageIndex"
-                          PageCount="PageCount"
-                          OnPaginate="OnPaginate">
+                <PageItem Page="PageCount-1" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate">
                     @PageCount
                 </PageItem>
             }
             else if (PageIndex >= (PageCount - SideVisible - 2))
             {
-                <PageItem Page="0"
-                          PageIndex="PageIndex"
-                          PageCount="PageCount"
-                          OnPaginate="OnPaginate">1</PageItem>
+                <PageItem Page="0" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate">1</PageItem>
                 <PageLabel>...</PageLabel>
-                <PageItemRange StartIndex="PageCount - SideVisible * 2 - 2"
-                               EndIndex="PageCount-1"
-                               PageIndex="PageIndex"
-                               PageCount="PageCount"
-                               OnPaginate="OnPaginate" />
+                <PageItemRange StartIndex="PageCount - SideVisible * 2 - 2" EndIndex="PageCount-1" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate" />
             }
             else
             {
-                <PageItem Page="0"
-                          PageIndex="PageIndex"
-                          PageCount="PageCount"
-                          OnPaginate="OnPaginate">1</PageItem>
+                <PageItem Page="0" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate">1</PageItem>
                 <PageLabel>...</PageLabel>
-                <PageItemRange StartIndex="PageIndex-SideVisible"
-                               EndIndex="PageIndex+SideVisible"
-                               PageIndex="PageIndex"
-                               PageCount="PageCount"
-                               OnPaginate="OnPaginate" />
+                <PageItemRange StartIndex="PageIndex-SideVisible" EndIndex="PageIndex+SideVisible" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate" />
                 <PageLabel>...</PageLabel>
-                <PageItem Page="PageCount-1"
-                          PageIndex="PageIndex"
-                          PageCount="PageCount"
-                          OnPaginate="OnPaginate">@PageCount</PageItem>
-                    }
-            <PageItem Page="PageIndex+1"
-                      PageIndex="PageIndex"
-                      PageCount="PageCount"
-                      OnPaginate="OnPaginate">
+                <PageItem Page="PageCount-1" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate">@PageCount</PageItem>
+            }
+            <PageItem Page="PageIndex+1" PageIndex="PageIndex" PageCount="PageCount" OnPaginate="OnPaginate">
                 <span aria-hidden="true">&raquo;</span>
             </PageItem>
             <PageLabel>@($"Total Items: {Total}")</PageLabel>
@@ -74,20 +40,11 @@
 }
 
 @functions {
-    [Parameter]
-    public int PageIndex { get; set; }
-
-    [Parameter]
-    public int PageCount { get; set; } = 1;
-
-    [Parameter]
-    public int Total { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnPaginate { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IDictionary<string, object> AdditionalAttributes { get; set; } = new Dictionary<string, object>();
+    [Parameter] public int PageIndex { get; set; }
+    [Parameter] public int PageCount { get; set; } = 1;
+    [Parameter] public int Total { get; set; }
+    [Parameter] public EventCallback<int> OnPaginate { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object> AdditionalAttributes { get; set; } = new Dictionary<string, object>();
 
     private const int SideVisible = 2;
 }

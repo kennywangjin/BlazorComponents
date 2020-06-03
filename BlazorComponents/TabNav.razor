@@ -9,9 +9,9 @@
 </li>
 
 @code {
-    [Parameter] RenderFragment ChildContent { get; set; }
-    [Parameter] string TabId { get; set; }
-    [CascadingParameter] TabListContext Context { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; } = default!;
+    [Parameter] public string TabId { get; set; } = string.Empty;
+    [CascadingParameter] public TabListContext Context { get; set; } = default!;
 
     bool IsActive => Context.ActiveTabId == TabId;
 }

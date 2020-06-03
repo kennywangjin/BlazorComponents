@@ -1,19 +1,16 @@
-﻿<Modal IsVisible="Model.IsVisible"
-       Size="Size"
-       OnClose="(_=>Model.IsVisible=false)"
-       OnClosed="Model.OnClosed">
-    <EditForm Model="Model" OnValidSubmit="Model.OnValidSubmit">
-        <DataAnnotationsValidator />
-        <ModalHeader OnClose="@(()=>Model.IsVisible=false)">
-            <i class="@($" fas fa-{TitleIcon}")" aria-hidden="true"></i>
+﻿<EditForm Model="Model" OnValidSubmit="Model.OnValidSubmit">
+    <DataAnnotationsValidator />
+    <Modal IsVisible="Model.IsVisible" Size="Size" OnClose="(_=>Model.IsVisible=false)" OnClosed="Model.OnClosed">
+        <ModalTitle>
+            <i class="@($"fas fa-{TitleIcon}")" aria-hidden="true"></i>
             <span class="ml-1">@TitleText</span>
-        </ModalHeader>
+        </ModalTitle>
         <ModalBody>
             @ChildContent
         </ModalBody>
         <ModalFooter>
             <button type="submit" class="btn btn-primary">
-                <i class="@($" fas fa-{SubmitIcon}")" aria-hidden="true"></i>
+                <i class="@($"fas fa-{SubmitIcon}")" aria-hidden="true"></i>
                 <span class="ml-1">@SubmitText</span>
             </button>
             <button type="button"
@@ -23,15 +20,15 @@
                 <span class="ml-1">Close</span>
             </button>
         </ModalFooter>
-    </EditForm>
-</Modal>
+    </Modal>
+</EditForm>
 
 @code {
-    [Parameter] ModalFormModel Model { get; set; }
-    [Parameter] string TitleText { get; set; } = "Form Title";
-    [Parameter] string TitleIcon { get; set; } = "plus";
-    [Parameter] string SubmitText { get; set; } = "Save";
-    [Parameter] string SubmitIcon { get; set; } = "save";
-    [Parameter] ModalSize Size { get; set; } = ModalSize.Default;
-    [Parameter] RenderFragment ChildContent { get; set; }
+    [Parameter] public ModalFormModel Model { get; set; } = default!;
+    [Parameter] public string TitleText { get; set; } = "Form Title";
+    [Parameter] public string TitleIcon { get; set; } = "plus";
+    [Parameter] public string SubmitText { get; set; } = "Save";
+    [Parameter] public string SubmitIcon { get; set; } = "save";
+    [Parameter] public ModalSize Size { get; set; } = ModalSize.Default;
+    [Parameter] public RenderFragment ChildContent { get; set; } = default!;
 }

@@ -1,5 +1,3 @@
-@implements IDisposable
-
 <CascadingValue Value="@_context">
     @if (IsCard)
     {
@@ -30,18 +28,16 @@
 </CascadingValue>
 
 @code {
-    [Parameter]    public RenderFragment TabNavs { get; set; }
-    [Parameter]    public RenderFragment TabPanes { get; set; }
-    [Parameter]    public string ActiveTabId { get; set; }
-    [Parameter]    public bool IsCard { get; set; }
+    [Parameter] public RenderFragment TabNavs { get; set; } = default!;
+    [Parameter] public RenderFragment TabPanes { get; set; } = default!;
+    [Parameter] public string ActiveTabId { get; set; } = string.Empty;
+    [Parameter] public bool IsCard { get; set; }
 
-    TabListContext _context;
+    TabListContext _context = default!;
 
     protected override void OnInitialized()
     {
         _context = new TabListContext { ActiveTabId = ActiveTabId };
         _context.StateChanged += StateHasChanged;
     }
-
-    public void Dispose() => _context.StateChanged -= StateHasChanged;
 }

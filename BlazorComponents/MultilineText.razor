@@ -4,7 +4,7 @@
 }
 
 @code {
-    [Parameter] string Text { get; set; }
+    [Parameter] public string Text { get; set; } = string.Empty;
 
     IEnumerable<string> TextSegments =>
         string.IsNullOrEmpty(Text) ?

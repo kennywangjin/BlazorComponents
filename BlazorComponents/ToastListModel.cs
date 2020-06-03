@@ -8,7 +8,7 @@ namespace BlazorComponents
 {
     public class ToastListModel
     {
-        public event EventHandler StateChanged;
+        public event Func<Task>? StateChanged;
 
         public HashSet<Guid> ClosingList { get; } = new HashSet<Guid>(3);
 
@@ -34,22 +34,22 @@ namespace BlazorComponents
             {
                 Task.Delay(AutoRemoveDelay).ContinueWith(t => RemoveMessage(id));
             }
-            NotifyStateChanged();
+            OnStateChanged();
         }
 
         public void RemoveMessage(Guid id)
         {
             ClosingList.Add(id);
-            NotifyStateChanged();
+            OnStateChanged();
         }
 
         public void OnRemoved(Guid id)
         {
             ClosingList.Remove(id);
             MessageList.Remove(id);
-            NotifyStateChanged();
+            OnStateChanged();
         }
 
-        private void NotifyStateChanged() => StateChanged?.Invoke(this, EventArgs.Empty);
+        private void OnStateChanged() => StateChanged?.Invoke();
     }
 }

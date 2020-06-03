@@ -8,7 +8,7 @@ namespace BlazorComponents
         private bool _isSubmitted = false;
         private string _message = string.Empty;
 
-        public event EventHandler<ModalFormClosedEventArgs> Closed;
+        public event EventHandler<ModalFormClosedEventArgs>? Closed;
 
         public bool IsVisible { get; set; } = true;
 

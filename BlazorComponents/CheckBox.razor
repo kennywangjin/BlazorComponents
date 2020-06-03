@@ -10,8 +10,8 @@
 
 @code {
     [Parameter]public string CssClass { get; set; } = string.Empty;
-    [Parameter]public string Label { get; set; }
-    [Parameter]public string Id { get; set; }
+    [Parameter]public string Label { get; set; } = string.Empty;
+    [Parameter]public string Id { get; set; } = string.Empty;
     [Parameter]public bool IsReadonly { get; set; } = false;
     [Parameter]public bool IsChecked { get; set; }
     [Parameter]public EventCallback OnToggle { get; set; }
